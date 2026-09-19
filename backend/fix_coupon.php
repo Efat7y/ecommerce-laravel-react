@@ -1,0 +1,1 @@
+<?php require "vendor/autoload.php"; $app = require_once "bootstrap/app.php"; $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap(); $c = App\Models\Coupon::find(1); if($c) { $c->allowed_tier = "all"; $c->save(); echo "Fixed\n"; }
