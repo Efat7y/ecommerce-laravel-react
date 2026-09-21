@@ -94,7 +94,7 @@ export default function Header() {
           >
             <Heart className="h-6 w-6" />
           </Link>
-          <MessagesDropdown />
+          {settings?.feature_chat === "true" && <MessagesDropdown />}
             <Link id="cart-icon-header"
             to="/cart"
             className="relative p-2 text-gray-700 hover:text-blue-600 transition-all duration-300 dark:text-gray-300 dark:hover:text-blue-400"
