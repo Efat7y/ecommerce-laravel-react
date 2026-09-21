@@ -1,4 +1,5 @@
-import { Loader2, Save, Settings as SettingsIcon, FileText } from "lucide-react";
+import { Loader2, Save, Settings as SettingsIcon, FileText, Lock, Unlock } from "lucide-react";
+import Swal from "sweetalert2";
 import useSettingsManager from "./hooks/useSettingsManager";
 
 export default function SettingsManager() {
@@ -11,6 +12,35 @@ export default function SettingsManager() {
     saving,
     handleSubmit
   } = useSettingsManager();
+
+  
+  const handleFeatureToggle = (featureKey, currentValue) => {
+    // If it's currently false/undefined, we are trying to enable it (Unlock)
+    // If it's true, we are trying to disable it (Lock)
+    const isEnabling = !currentValue || currentValue === 'false';
+    
+    Swal.fire({
+      title: isEnabling ? 'فك قفل الميزة' : 'قفل الميزة',
+      text: 'أدخل الرقم السري للمطور:',
+      input: 'password',
+      inputAttributes: {
+        autocapitalize: 'off'
+      },
+      showCancelButton: true,
+      confirmButtonText: 'تأكيد',
+      cancelButtonText: 'إلغاء',
+      confirmButtonColor: isEnabling ? '#10b981' : '#ef4444',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (result.value === 'dev2026') {
+          setSettings({ ...settings, [featureKey]: isEnabling ? 'true' : 'false' });
+          Swal.fire('نجاح', 'تم تغيير حالة الميزة بنجاح. لا تنسَ حفظ الإعدادات في الأسفل!', 'success');
+        } else {
+          Swal.fire('خطأ', 'الرقم السري غير صحيح!', 'error');
+        }
+      }
+    });
+  };
 
   if (loading) {
     return (

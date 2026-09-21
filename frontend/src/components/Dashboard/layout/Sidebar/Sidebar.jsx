@@ -17,10 +17,12 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getUser } from "../../../../utils/auth";
+import { useSettings } from "../../../../context/SettingsContext";
 
 export default function Sidebar({ isOpen, onClose }) {
   const location = useLocation();
   const user = getUser();
+  const { settings } = useSettings();
 
   const allMenuItems = [
         { name: "الرئيسية للموقع", path: "/", icon: Home },
@@ -55,7 +57,12 @@ export default function Sidebar({ isOpen, onClose }) {
     },
   ];
 
+  
   const menuItems = allMenuItems.filter((item) => {
+    // Check if feature is locked
+    if (item.path === '/dashboard/flash-sales' && settings?.feature_flash_sales !== 'true') return false;
+    if (item.path === '/dashboard/formulas' && settings?.feature_formulas !== 'true') return false;
+
     if (user?.role === "vendor") {
       return (
         !item.adminOnly &&
@@ -64,6 +71,7 @@ export default function Sidebar({ isOpen, onClose }) {
     }
     return true;
   });
+
 
   return (
     <>

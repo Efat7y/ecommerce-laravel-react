@@ -17,6 +17,7 @@ import FlashSaleSection from "@/components/Website/FlashSaleSection/FlashSaleSec
 import FormulaSection from "@/components/Website/FormulaSection";
 
 export default function LandingPage() {
+  const { settings } = useSettings();
   return (
     <div
       className="min-h-screen bg-slate-50 text-gray-900 dark:bg-slate-950 dark:text-gray-100"
@@ -31,7 +32,7 @@ export default function LandingPage() {
       <HeroSection />
 
       {/* Flash Sale Slider */}
-      <FlashSaleSection />
+      {settings?.feature_flash_sales === "true" && <FlashSaleSection />}
 
       {/* Special Discount Banner */}
       <SpecialDiscountBanner />

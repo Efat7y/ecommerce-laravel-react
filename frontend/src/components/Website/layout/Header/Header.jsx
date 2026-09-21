@@ -73,10 +73,10 @@ export default function Header() {
             </Link>
           </div>
           <div className="flex gap-1 text-sm font-medium text-gray-700 hover:text-blue-600 transition dark:text-gray-300 dark:hover:text-blue-400">
-            <Link to="/profit-calculator" className="flex items-center gap-1">
+            {settings?.feature_formulas === "true" && <Link to="/profit-calculator" className="flex items-center gap-1">
               <Calculator className="h-5 w-5" />
               حاسبة الأرباح
-            </Link>
+            </Link>}
           </div>
           <div className="flex gap-1 text-sm font-medium text-gray-700 hover:text-blue-600 transition dark:text-gray-300 dark:hover:text-blue-400">
             <Link to="/contact">تواصل معنا</Link>

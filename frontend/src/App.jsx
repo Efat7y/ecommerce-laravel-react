@@ -81,7 +81,7 @@ function App() {
 
   return (
     <>
-      <FloatingChat />
+      {settings?.feature_chat === "true" && <FloatingChat />}
     <Routes>
       {/* Public Pages */}
       <Route path="/" element={<LandingPage />} />
