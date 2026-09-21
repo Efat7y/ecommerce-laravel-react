@@ -6,6 +6,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { Helmet } from "react-helmet-async";
+import { useSettings } from "@/context/SettingsContext";
 import CategoriesSection from "@/components/Website/CategoriesSection/CategoriesSection";
 import SpecialDiscountBanner from "@/components/Website/SpecialDiscountBanner/SpecialDiscountBanner";
 import Footer from "@/components/Website/layout/Footer/Footer";
@@ -52,3 +53,4 @@ export default function LandingPage() {
     </div>
   );
 }
+
