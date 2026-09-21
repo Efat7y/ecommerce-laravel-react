@@ -52,6 +52,35 @@ export default function useSettingsManager() {
     }
   };
 
+  
+  const saveSection = (keys, includeLogo = false) => {
+    setSaving(true);
+    const formData = new FormData();
+    
+    keys.forEach(key => {
+      if (settings[key] !== undefined && key !== 'logo_base64') {
+        formData.append(key, settings[key]);
+      }
+    });
+
+    if (includeLogo && logo) {
+      formData.append("logo", logo);
+    }
+
+    axios.post(`${baseUrl}/admin/settings`, formData, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    .then((res) => {
+      toast.success("تم الحفظ بنجاح");
+      setTimeout(() => window.location.reload(), 800);
+    })
+    .catch((err) => {
+      console.error(err);
+      toast.error("حدث خطأ أثناء الحفظ");
+      setSaving(false);
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setSaving(true);
@@ -89,6 +118,7 @@ export default function useSettingsManager() {
     handleLogoChange,
     loading,
     saving,
-    handleSubmit
+    handleSubmit,
+    saveSection
   };
 }
