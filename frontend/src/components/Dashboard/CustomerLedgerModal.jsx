@@ -45,8 +45,7 @@ export default function CustomerLedgerModal({ customer, onClose }) {
 
   
   const handlePrint = () => {
-    // Basic print trick: hide other elements via CSS, or just rely on standard print window
-    window.print();
+    window.open(`/print/ledger/${customer.id}`, '_blank');
   };
 
   const handleRecordPayment = (e) => {

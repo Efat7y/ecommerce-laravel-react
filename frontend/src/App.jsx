@@ -33,6 +33,7 @@ import VendorsManager from "./pages/Dashboard/VendorsManager/VendorsManager";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import DashboardLayout from "./components/Dashboard/DashboardLayout";
 import FloatingChat from "./components/Website/FloatingChat/FloatingChat";
+import PrintableLedger from "./pages/Printables/PrintableLedger";
 import ErrorPage from "./pages/ErrorPage";
 
 function App() {
@@ -104,7 +105,9 @@ function App() {
       <Route path="/orders/edit/:id" element={<ProtectedRoute><CustomerEditOrder /></ProtectedRoute>} />
 
       {/* Protected Admin Pages */}
-      <Route path="/dashboard" element={<ProtectedRoute adminOnly><DashboardLayout /></ProtectedRoute>}>
+      <Route path="/print/ledger/:id" element={<ProtectedRoute adminOnly><PrintableLedger /></ProtectedRoute>} />
+
+        <Route path="/dashboard" element={<ProtectedRoute adminOnly><DashboardLayout /></ProtectedRoute>}>
         <Route index element={<Dashboard />} />
         <Route path="categories" element={<CategoryManager />} />
         <Route path="products" element={<ProductManager />} />
