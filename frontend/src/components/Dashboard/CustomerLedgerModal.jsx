@@ -11,8 +11,10 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 export default function CustomerLedgerModal({ customer, onClose }) {
+  const navigate = useNavigate();
   const [ledger, setLedger] = useState(null);
   const [customerData, setCustomerData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -45,7 +47,7 @@ export default function CustomerLedgerModal({ customer, onClose }) {
 
   
   const handlePrint = () => {
-    window.open(`/print/ledger/${customer.id}`, '_blank');
+    navigate(`/print/ledger/${customer.id}`);
   };
 
   const handleRecordPayment = (e) => {

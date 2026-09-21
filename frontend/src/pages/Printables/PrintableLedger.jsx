@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSettings } from "../../context/SettingsContext";
 
 export default function PrintableLedger() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [data, setData] = useState(null);
   const { settings } = useSettings();
   const baseUrl = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api";
@@ -46,16 +47,37 @@ export default function PrintableLedger() {
   const { user, ledger } = data;
 
   return (
-    <div className="min-h-screen bg-white text-black font-sans print:p-0 p-8" dir="rtl">
-      <div className="mx-auto" style={{ maxWidth: "210mm" }}>
+    <div className="min-h-screen bg-white text-black font-sans p-8 print:p-0 w-full" dir="rtl">
+      <style>
+        {`
+          @page {
+            size: A4;
+            margin: 15mm;
+          }
+          @media print {
+            body {
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+              background: white;
+            }
+          }
+        `}
+      </style>
+      <div className="mx-auto w-full max-w-4xl print:max-w-full print:mx-0 print:w-full">
         
         {/* Print Controls (Hidden when printing) */}
-        <div className="mb-8 flex justify-end print:hidden">
+        <div className="mb-8 flex justify-between items-center print:hidden">
+          <button 
+            onClick={() => navigate(-1)}
+            className="px-6 py-2 bg-slate-200 text-slate-800 font-bold rounded-lg hover:bg-slate-300"
+          >
+            &rarr; العودة للوحة التحكم
+          </button>
           <button 
             onClick={() => window.print()}
             className="px-6 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700"
           >
-            طباعة الورقة الآن
+            طباعة كشف الحساب
           </button>
         </div>
 
