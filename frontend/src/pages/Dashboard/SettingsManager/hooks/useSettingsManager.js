@@ -58,7 +58,9 @@ export default function useSettingsManager() {
 
     const formData = new FormData();
     Object.keys(settings).forEach(key => {
-      formData.append(key, settings[key]);
+      if (key !== 'logo_base64') {
+        formData.append(key, settings[key]);
+      }
     });
     if (logo) {
       formData.append("logo", logo);
