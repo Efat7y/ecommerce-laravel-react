@@ -53,13 +53,14 @@ export default function useSettingsManager() {
   };
 
   
-  const saveSection = (keys, includeLogo = false) => {
+  const saveSection = (keys, includeLogo = false, overrides = {}) => {
     setSaving(true);
     const formData = new FormData();
     
     keys.forEach(key => {
-      if (settings[key] !== undefined && key !== 'logo_base64') {
-        formData.append(key, settings[key]);
+      let valueToSave = overrides[key] !== undefined ? overrides[key] : settings[key];
+      if (valueToSave !== undefined && key !== 'logo_base64') {
+        formData.append(key, valueToSave);
       }
     });
 
