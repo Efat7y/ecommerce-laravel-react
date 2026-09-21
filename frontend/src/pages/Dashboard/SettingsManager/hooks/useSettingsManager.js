@@ -30,17 +30,10 @@ export default function useSettingsManager() {
   useEffect(() => {
     axios.get(`${baseUrl}/settings`)
       .then((res) => {
-        setSettings({
-          site_name: res.data.site_name || "",
-          site_description: res.data.site_description || "",
-          shipping_fee: res.data.shipping_fee || "",
-          whatsapp_number: res.data.whatsapp_number || "",
-          facebook_url: res.data.facebook_url || "",
-          vendor_name: res.data.vendor_name || "",
-          commercial_record: res.data.commercial_record || "",
-          vendor_address: res.data.vendor_address || "",
-          support_phone: res.data.support_phone || "",
-        });
+        setSettings(prev => ({
+          ...prev,
+          ...res.data
+        }));
         if (res.data.logo) {
           setLogoPreview(`http://127.0.0.1:8000${res.data.logo}`);
         }
@@ -75,6 +68,8 @@ export default function useSettingsManager() {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then((res) => {
+        toast.success("تم حفظ الإعدادات بنجاح");
+        setTimeout(() => window.location.reload(), 1000);
         toast.success("تم حفظ الإعدادات بنجاح");
         setSaving(false);
       })
