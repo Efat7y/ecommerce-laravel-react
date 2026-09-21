@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Search,
   SlidersHorizontal,
+  ChevronDown,
   ShoppingCart,
   Info,
   Loader2,
@@ -14,6 +16,7 @@ import WishlistButton from "@/components/Website/WishlistButton/WishlistButton";
 import useProductCatalog from "./hooks/useProductCatalog";
 
 export default function ProductCatalog() {
+  const [showFilters, setShowFilters] = useState(false);
   const {
     categories,
     loading,
@@ -40,8 +43,23 @@ export default function ProductCatalog() {
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row gap-8">
           <aside className="w-full md:w-64 flex-shrink-0">
-            <div className="sticky top-20 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-slate-900">
-              <div className="flex items-center gap-2 font-bold text-gray-900 dark:text-white mb-6">
+            {/* Mobile Toggle */}
+            <div className="md:hidden mb-4">
+              <button 
+                onClick={() => setShowFilters(!showFilters)}
+                className="w-full flex items-center justify-between bg-white dark:bg-slate-900 border border-gray-200 dark:border-gray-800 p-4 rounded-xl shadow-sm text-gray-900 dark:text-white font-bold"
+              >
+                <div className="flex items-center gap-2">
+                  <SlidersHorizontal className="h-5 w-5 text-blue-600" />
+                  <span>خيارات التصفية</span>
+                </div>
+                <ChevronDown className={`w-5 h-5 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
+              </button>
+            </div>
+
+            {/* Filter Content */}
+            <div className={`sticky top-20 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-slate-900 ${showFilters ? 'block' : 'hidden'} md:block`}>
+              <div className="hidden md:flex items-center gap-2 font-bold text-gray-900 dark:text-white mb-6">
                 <SlidersHorizontal className="h-5 w-5 text-blue-600" />
                 <span>خيارات التصفية</span>
               </div>
@@ -131,10 +149,10 @@ export default function ProductCatalog() {
                   return (
                     <div
                       key={p.id}
-                      className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition dark:border-gray-800 dark:bg-slate-900"
+                      className="group flex flex-col justify-between rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition dark:border-gray-800 dark:bg-slate-900"
                     >
                       {/* Image Area */}
-                      <div className="h-48 bg-slate-100 flex items-center justify-center overflow-hidden relative">
+                      <div className="h-48 bg-slate-100 flex items-center justify-center overflow-hidden relative rounded-t-2xl">
                         {p.image ? (
                           <img
                             src={p.image}
@@ -174,38 +192,38 @@ export default function ProductCatalog() {
                         </p>
 
                         <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800">
-                          <div className="text-xs text-gray-400 dark:text-gray-500 mb-1">
-                            وحدة التعبئة:{" "}
-                            <span className="font-semibold text-gray-600 dark:text-gray-300">
+                          {/* Price & Unit (Restructured) */}
+                          <div className="flex items-center justify-between mb-4">
+                            <div className="flex flex-col">
+                              <span className="text-xl font-extrabold text-blue-600 dark:text-blue-400">
+                                {parseFloat(p.price).toLocaleString()}{" "}
+                                <span className="text-sm font-normal text-gray-500">ج.م</span>
+                              </span>
+                            </div>
+                            <div className="text-xs font-medium text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700">
                               {p.unit}
-                            </span>
+                            </div>
                           </div>
 
-                          <div className="flex items-center justify-between mt-3">
-                            <span className="text-lg font-extrabold text-blue-600 dark:text-blue-400">
-                              {parseFloat(p.price).toLocaleString()}{" "}
-                              <span className="text-xs font-normal text-gray-500">
-                                ج.م
-                              </span>
-                            </span>
-
+                          {/* Action Buttons */}
+                          <div className="flex items-center justify-between gap-2 mb-3">
                             <div className="flex items-center gap-2">
-                              <WishlistButton productId={p.id} productImage={p.image} className="mx-2" />
+                              <WishlistButton productId={p.id} productImage={p.image} className="mx-0" />
                               <Link
                                 to={`/products/${p.id}`}
-                                className="p-2 rounded-lg bg-gray-50 text-gray-600 hover:bg-gray-100 hover:text-blue-600 transition dark:bg-slate-800 dark:text-gray-400 dark:hover:bg-slate-700"
+                                className="p-2 rounded-lg bg-gray-50 text-gray-600 hover:bg-gray-200 hover:text-blue-600 transition dark:bg-slate-800 dark:text-gray-400 dark:hover:bg-slate-700"
                                 title="التفاصيل والمواصفات"
                               >
-                                <Info className="h-4 w-4" />
+                                <Info className="h-5 w-5" />
                               </Link>
-
+                            </div>
+                            
+                            <div className="flex-1 flex justify-end">
                               {qtyInCart > 0 ? (
-                                <div className="flex items-center rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-slate-800">
+                                <div className="flex items-center rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-slate-800 w-full justify-between">
                                   <button
-                                    onClick={() =>
-                                      updateQuantity(p.id, qtyInCart - 1)
-                                    }
-                                    className="px-2.5 py-1.5 text-gray-600 hover:bg-gray-200 rounded-r-lg transition dark:text-gray-300 dark:hover:bg-slate-700"
+                                    onClick={() => updateQuantity(p.id, qtyInCart - 1)}
+                                    className="px-3 py-1.5 text-gray-600 hover:bg-gray-200 rounded-r-lg transition dark:text-gray-300 dark:hover:bg-slate-700"
                                   >
                                     -
                                   </button>
@@ -213,10 +231,8 @@ export default function ProductCatalog() {
                                     {qtyInCart}
                                   </span>
                                   <button
-                                    onClick={() =>
-                                      updateQuantity(p.id, qtyInCart + 1)
-                                    }
-                                    className="px-2.5 py-1.5 text-gray-600 hover:bg-gray-200 rounded-l-lg transition dark:text-gray-300 dark:hover:bg-slate-700"
+                                    onClick={() => updateQuantity(p.id, qtyInCart + 1)}
+                                    className="px-3 py-1.5 text-gray-600 hover:bg-gray-200 rounded-l-lg transition dark:text-gray-300 dark:hover:bg-slate-700"
                                   >
                                     +
                                   </button>
@@ -225,13 +241,13 @@ export default function ProductCatalog() {
                                 <button
                                   onClick={() => addToCart(p, 1)}
                                   disabled={p.stock === 0}
-                                  className={`flex items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold text-white shadow-sm transition ${
+                                  className={`flex items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold text-white shadow-sm transition w-full ${
                                     p.stock === 0
-                                      ? "bg-gray-300 cursor-not-allowed"
+                                      ? "bg-gray-300 cursor-not-allowed dark:bg-gray-700"
                                       : "bg-blue-600 hover:bg-blue-700"
                                   }`}
                                 >
-                                  <ShoppingCart className="h-3.5 w-3.5" />
+                                  <ShoppingCart className="h-4 w-4" />
                                   أضف للسلة
                                 </button>
                               )}
@@ -252,4 +268,7 @@ export default function ProductCatalog() {
     </div>
   );
 }
+
+
+
 

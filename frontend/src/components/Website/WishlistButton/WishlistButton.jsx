@@ -1,6 +1,8 @@
 import { Heart } from "lucide-react";
 import { useInteraction } from "@/context/InteractionContext";
 import { flyToWishlist } from "@/utils/animations";
+import { getToken } from "@/utils/auth";
+import { toast } from "sonner";
 
 export default function WishlistButton({ productId, productImage, className = "" }) {
   const { wishlistIds, toggleWishlist } = useInteraction();
@@ -11,6 +13,11 @@ export default function WishlistButton({ productId, productImage, className = ""
     <button
       onClick={(e) => {
         e.preventDefault();
+        const token = getToken();
+        if (!token) {
+          toast.error("يرجى تسجيل الدخول أولاً لإضافة المنتج للمفضلة");
+          return;
+        }
         toggleWishlist(productId);
         if (!inWishlist) {
           flyToWishlist(e, productImage);

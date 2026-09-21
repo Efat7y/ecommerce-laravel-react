@@ -1,6 +1,20 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, ShoppingBag, ClipboardList, Home, Users, X, Menu, FolderTree, Settings, Ticket, Mail, Store } from "lucide-react";
+import {
+  LayoutDashboard,
+  ShoppingBag,
+  ClipboardList,
+  Home,
+  Users,
+  X,
+  Menu,
+  FolderTree,
+  Settings,
+  Ticket,
+  Mail,
+  Timer,
+  Store,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getUser } from "../../../../utils/auth";
 
@@ -9,20 +23,44 @@ export default function Sidebar({ isOpen, onClose }) {
   const user = getUser();
 
   const allMenuItems = [
-    { name: "الرئيسية للموقع", path: "/", icon: Home },
+        { name: "الرئيسية للموقع", path: "/", icon: Home },
     { name: "إحصائيات النظام", path: "/dashboard", icon: LayoutDashboard },
+    { name: "إدارة الخامات والمنتجات", path: "/dashboard/products", icon: ShoppingBag },
     { name: "إدارة الأقسام", path: "/dashboard/categories", icon: FolderTree },
-    { name: "إدارة الخامات", path: "/dashboard/products", icon: ShoppingBag },
-    { name: "الطلبات والفواتير", path: "/dashboard/orders", icon: ClipboardList },
+    {
+      name: "الطلبات والفواتير",
+      path: "/dashboard/orders",
+      icon: ClipboardList,
+    },
     { name: "إدارة العملاء", path: "/dashboard/customers", icon: Users },
+    {
+      name: "عروض فلاش سيل",
+      path: "/dashboard/flash-sales",
+      icon: Timer,
+      adminOnly: true,
+    },
+    {
+      name: "إدارة التركيبات",
+      path: "/dashboard/formulas",
+      icon: Store,
+      adminOnly: true,
+    },
     { name: "الكوبونات والخصومات", path: "/dashboard/coupons", icon: Ticket },
     { name: "صندوق الرسائل", path: "/dashboard/messages", icon: Mail },
-    { name: "إعدادات الموقع", path: "/dashboard/settings", icon: Settings, adminOnly: true },
+    {
+      name: "إعدادات الموقع",
+      path: "/dashboard/settings",
+      icon: Settings,
+      adminOnly: true,
+    },
   ];
 
-  const menuItems = allMenuItems.filter(item => {
-    if (user?.role === 'vendor') {
-      return !item.adminOnly && ['/dashboard/products', '/dashboard/orders', '/'].includes(item.path);
+  const menuItems = allMenuItems.filter((item) => {
+    if (user?.role === "vendor") {
+      return (
+        !item.adminOnly &&
+        ["/dashboard/products", "/dashboard/orders", "/"].includes(item.path)
+      );
     }
     return true;
   });
@@ -52,7 +90,7 @@ export default function Sidebar({ isOpen, onClose }) {
         dir="rtl"
       >
         <div className="h-16 flex items-center justify-between px-6 border-b border-slate-800 flex-shrink-0">
-          <motion.h2 
+          <motion.h2
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
@@ -94,7 +132,11 @@ export default function Sidebar({ isOpen, onClose }) {
                       layoutId="activeTab"
                       className="absolute inset-0 bg-blue-600 rounded-xl"
                       initial={false}
-                      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 25,
+                      }}
                     />
                   )}
                   <span className="relative z-10 flex items-center gap-3">
@@ -108,7 +150,9 @@ export default function Sidebar({ isOpen, onClose }) {
         </nav>
 
         <div className="p-4 border-t border-slate-800 flex-shrink-0">
-          <p className="text-xs text-slate-600 text-center">© 2025 الفتح للمنظفات</p>
+          <p className="text-xs text-slate-600 text-center">
+            © 2025 الفتح للمنظفات
+          </p>
         </div>
       </motion.aside>
     </>

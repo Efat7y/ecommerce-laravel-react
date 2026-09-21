@@ -9,6 +9,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Api\CouponController;
+use App\Http\Controllers\FlashSaleController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,12 +25,19 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/verify-otp', 'verifyOtp')->middleware('auth:sanctum');
 });
 
+// Fallback for unauthenticated API requests
+Route::get('/login', function () {
+    return response()->json(['message' => 'Unauthenticated.'], 401);
+})->name('login');
+
 // Public Product Catalog Routes
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/settings', [SettingController::class, 'index']);
 Route::get('/categories/{id}', [CategoryController::class, 'show']);
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
+Route::get('/flash-sale/active', [FlashSaleController::class, 'getActive']);
+Route::get('/formulas', [App\Http\Controllers\FormulaController::class, 'getActive']);
 
 // Coupons (Public)
 Route::post('/coupons/apply', [CouponController::class, 'apply']);
@@ -69,7 +77,21 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/admin/users/{id}/payments', [PaymentController::class, 'storePayment']);
     Route::post('/admin/settings', [SettingController::class, 'update']);
     
-    // Coupons (Admin)
+    // Flash Sale Admin
+    Route::get('/admin/flash-sales', [FlashSaleController::class, 'index']);
+    Route::post('/admin/flash-sales', [FlashSaleController::class, 'store']);
+    Route::put('/admin/flash-sales/{id}', [FlashSaleController::class, 'update']);
+    Route::post('/admin/flash-sales/{id}/products', [FlashSaleController::class, 'syncProducts']);
+    Route::delete('/admin/flash-sales/{id}', [FlashSaleController::class, 'destroy']);
+    
+    // Formulas Admin
+    Route::get('/admin/formulas', [App\Http\Controllers\FormulaController::class, 'index']);
+    Route::post('/admin/formulas', [App\Http\Controllers\FormulaController::class, 'store']);
+    Route::put('/admin/formulas/{id}', [App\Http\Controllers\FormulaController::class, 'update']);
+    Route::delete('/admin/formulas/{id}', [App\Http\Controllers\FormulaController::class, 'destroy']);
+    Route::post('/admin/formulas/{id}/products', [App\Http\Controllers\FormulaController::class, 'syncProducts']);
+
+    // Coupons Admin
     Route::get('/admin/coupons', [CouponController::class, 'index']);
     Route::post('/admin/coupons', [CouponController::class, 'store']);
     Route::put('/admin/coupons/{coupon}', [CouponController::class, 'update']);
@@ -91,6 +113,7 @@ Route::post('/contact', [\App\Http\Controllers\MessageController::class, 'store'
 
 // Reactions (Public - can view counts)
 Route::get('/products/{productId}/reactions', [\App\Http\Controllers\InteractionController::class, 'getProductReactions']);
+Route::get('/products/{productId}/reactions/details', [\App\Http\Controllers\InteractionController::class, 'getReactionDetails']);
 
 // Wishlist (Public - can view own IDs if logged in via sanctum fallback, but strict auth is below)
 Route::get('/wishlists/ids', [\App\Http\Controllers\InteractionController::class, 'getWishlistedIds']);
@@ -100,4 +123,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/products/{productId}/react', [\App\Http\Controllers\InteractionController::class, 'toggleReaction']);
     Route::post('/products/{productId}/wishlist', [\App\Http\Controllers\InteractionController::class, 'toggleWishlist']);
     Route::get('/wishlist', [\App\Http\Controllers\InteractionController::class, 'getUserWishlist']);
+
+    // User-to-User Chat
+    Route::post('/chat/start', [\App\Http\Controllers\ChatController::class, 'startConversation']);
+    Route::get('/chat/conversations', [\App\Http\Controllers\ChatController::class, 'getConversations']);
+    Route::get('/chat/conversations/{id}/messages', [\App\Http\Controllers\ChatController::class, 'getMessages']);
+    Route::post('/chat/conversations/{id}/messages', [\App\Http\Controllers\ChatController::class, 'sendMessage']);
+    Route::post('/chat/conversations/{id}/read', [\App\Http\Controllers\ChatController::class, 'markAsRead']);
+    Route::post('/chat/conversations/{id}/typing', [\App\Http\Controllers\ChatController::class, 'typing']);
+
 });
+
+
+

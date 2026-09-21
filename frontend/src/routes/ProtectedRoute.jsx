@@ -1,3 +1,4 @@
+import ErrorPage from "@/pages/ErrorPage";
 import { Navigate, useLocation } from "react-router-dom";
 import { getToken, hasDashboardAccess, getUser } from "@/utils/auth";
 
@@ -15,7 +16,7 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
   }
 
   if (adminOnly && !hasDashboardAccess()) {
-    return <Navigate to="/" replace />;
+    return <ErrorPage type="403" />;
   }
 
   return children;

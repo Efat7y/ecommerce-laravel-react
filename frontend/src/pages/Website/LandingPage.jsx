@@ -1,5 +1,10 @@
-
-import { CheckCircle2, ShieldCheck, Zap, ShoppingCart, ArrowRight } from "lucide-react";
+import {
+  CheckCircle2,
+  ShieldCheck,
+  Zap,
+  ShoppingCart,
+  ArrowRight,
+} from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import CategoriesSection from "@/components/Website/CategoriesSection/CategoriesSection";
 import SpecialDiscountBanner from "@/components/Website/SpecialDiscountBanner/SpecialDiscountBanner";
@@ -8,20 +13,25 @@ import Header from "@/components/Website/layout/Header/Header";
 import FeaturedProducts from "@/components/Website/FeaturedProducts/FeaturedProducts";
 import TrustBadges from "@/components/Website/TrustBadges/TrustBadges";
 import HeroSection from "@/components/Website/HeroSection/HeroSection";
+import FlashSaleSection from "@/components/Website/FlashSaleSection/FlashSaleSection";
+import FormulaSection from "@/components/Website/FormulaSection";
 
 export default function LandingPage() {
-  
-
-
   return (
-    <div className="min-h-screen bg-slate-50 text-gray-900 dark:bg-slate-950 dark:text-gray-100" dir="rtl">
+    <div
+      className="min-h-screen bg-slate-50 text-gray-900 dark:bg-slate-950 dark:text-gray-100"
+      dir="rtl"
+    >
       <Helmet>
-        <title>الرئيسيه</title>
+        <title>الرئيسية</title>
       </Helmet>
       <Header />
 
       {/* Hero Section */}
       <HeroSection />
+
+      {/* Flash Sale Slider */}
+      <FlashSaleSection />
 
       {/* Special Discount Banner */}
       <SpecialDiscountBanner />
@@ -32,6 +42,7 @@ export default function LandingPage() {
       {/* Featured Products */}
       <FeaturedProducts />
 
+      <FormulaSection />
       {/* Trust Badges */}
       <TrustBadges />
 

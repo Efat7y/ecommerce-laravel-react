@@ -44,10 +44,32 @@ class InteractionController extends Controller
     // Get reactions for a specific product
     public function getProductReactions($productId)
     {
-        $reactions = Reaction::where('product_id', $productId)
-            ->select('type', \DB::raw('count(*) as count'))
-            ->groupBy('type')
-            ->get();
+        $reactionsData = Reaction::with('user:id,name')->where('product_id', $productId)->get();
+        
+        $counts = [];
+        $usersByType = [];
+
+        foreach ($reactionsData as $r) {
+            $type = $r->type;
+            if (!isset($counts[$type])) {
+                $counts[$type] = 0;
+                $usersByType[$type] = [];
+            }
+            $counts[$type]++;
+            // Keep up to 15 names for the tooltip
+            if (count($usersByType[$type]) < 15 && $r->user) {
+                $usersByType[$type][] = trim($r->user->name);
+            }
+        }
+
+        $formattedCounts = [];
+        foreach ($counts as $type => $count) {
+            $formattedCounts[] = [
+                'type' => $type,
+                'count' => $count,
+                'users' => $usersByType[$type]
+            ];
+        }
             
         $userReaction = null;
         if (Auth::guard('sanctum')->check()) {
@@ -55,9 +77,16 @@ class InteractionController extends Controller
         }
 
         return response()->json([
-            'counts' => $reactions,
+            'counts' => $formattedCounts,
             'user_reaction' => $userReaction
         ]);
+    }
+
+
+    public function getReactionDetails($productId)
+    {
+        $reactions = \App\Models\Reaction::with("user:id,name,avatar")->where("product_id", $productId)->latest()->get();
+        return response()->json($reactions);
     }
 
     // Toggle Wishlist
@@ -95,3 +124,5 @@ class InteractionController extends Controller
         return response()->json([]);
     }
 }
+
+

@@ -20,7 +20,11 @@ export function SettingsProvider({ children }) {
 
   const fetchSettings = async () => {
     try {
-      const res = await axios.get(`${baseUrl}/settings`);
+      // Fetch settings but also wait at least 1.5 seconds so the splash screen has time to shine
+      const [res] = await Promise.all([
+        axios.get(`${baseUrl}/settings`),
+        new Promise(resolve => setTimeout(resolve, 1500))
+      ]);
       setSettings(res.data);
     } catch (error) {
       console.error("Failed to load settings:", error);

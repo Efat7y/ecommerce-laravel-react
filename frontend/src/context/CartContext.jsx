@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useEffect } from "react";
 import { toast } from "sonner";
+import { getToken } from "../utils/auth";
 
 const CartContext = createContext();
 
@@ -29,6 +30,12 @@ export const CartProvider = ({ children }) => {
   }, [cartItems]);
 
   const addToCart = (product, qty = 1) => {
+    const token = getToken();
+    if (!token) {
+      toast.error('يرجى تسجيل الدخول أولاً للتمكن من الإضافة للسلة');
+      return;
+    }
+
     setCartItems((prev) => {
       const existing = prev.find((item) => item.product.id === product.id);
       if (existing) {

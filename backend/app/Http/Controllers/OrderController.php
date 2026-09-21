@@ -42,13 +42,28 @@ class OrderController extends Controller
                     // Decrement stock
                     $product->decrement('stock', $itemData['quantity']);
 
-                    $itemTotal = $product->price * $itemData['quantity'];
+                    // Check Flash Sale Price
+                    $actualPrice = $product->price;
+                    $flashSale = \App\Models\FlashSale::where('is_active', true)
+                        ->where('end_time', '>', \Carbon\Carbon::now())
+                        ->first();
+                    
+                    if ($flashSale) {
+                        $flashSaleProduct = \App\Models\FlashSaleProduct::where('flash_sale_id', $flashSale->id)
+                            ->where('product_id', $product->id)
+                            ->first();
+                        if ($flashSaleProduct) {
+                            $actualPrice = $flashSaleProduct->discount_price;
+                        }
+                    }
+
+                    $itemTotal = $actualPrice * $itemData['quantity'];
                     $subtotal += $itemTotal;
 
                     $itemsToCreate[] = [
                         'product_id' => $product->id,
                         'quantity' => $itemData['quantity'],
-                        'price' => $product->price,
+                        'price' => $actualPrice,
                         'total_price' => $itemTotal,
                     ];
                 }
@@ -474,3 +489,4 @@ class OrderController extends Controller
         }
     }
 }
+

@@ -94,7 +94,7 @@ const FeaturedProducts = () => {
                 key={p.id}
                 className="group flex flex-col justify-between overflow-hidden rounded-3xl border border-gray-200/80 bg-white shadow-sm hover:shadow-xl hover:shadow-blue-900/5 transition-all duration-300 dark:border-gray-800 dark:bg-slate-900"
               >
-                <div className="h-56 bg-slate-100 dark:bg-slate-800 flex items-center justify-center overflow-hidden relative">
+                <div className="h-56 bg-slate-100 dark:bg-slate-800 flex items-center justify-center overflow-hidden relative rounded-t-3xl">
                   {p.image ? (
                     <motion.img
                       whileHover={{ scale: 1.1 }}
@@ -123,45 +123,46 @@ const FeaturedProducts = () => {
                   </p>
 
                   <div className="mt-5 pt-5 border-t border-gray-100 dark:border-gray-800">
-                    <div className="text-xs font-medium text-gray-400 dark:text-gray-500 mb-1.5 flex items-center gap-1">
-                      وحدة التعبئة:{" "}
-                      <span className="font-bold text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-md">
-                        {p.unit}
-                      </span>
-                    </div>
+                      {/* Price & Unit (Restructured) */}
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex flex-col">
+                          <span className="text-2xl font-black text-blue-600 dark:text-blue-400">
+                            {parseFloat(p.price).toLocaleString()}{" "}
+                            <span className="text-sm font-bold text-gray-400">ج.م</span>
+                          </span>
+                        </div>
+                        <div className="text-xs font-semibold text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700">
+                          {p.unit}
+                        </div>
+                      </div>
 
-                    <div className="flex items-center justify-between mt-3">
-                      <span className="text-2xl font-black text-blue-600 dark:text-blue-400">
-                        {parseFloat(p.price).toLocaleString()}{" "}
-                        <span className="text-sm font-bold text-gray-400">
-                          ج.م
-                        </span>
-                      </span>
-
-                      <div className="flex gap-2 items-center">
-                        <WishlistButton productId={p.id} productImage={p.image} />
-                        <motion.button
-                          whileHover={p.stock > 0 ? { scale: 1.05 } : {}}
-                          whileTap={p.stock > 0 ? { scale: 0.95 } : {}}
-                          onClick={(e) => {
-                            addToCart(p, 1);
-                            flyToCart(e, p.image);
-                          }}
-                          disabled={p.stock === 0}
-                          className={`p-3 rounded-xl transition-colors shadow-sm ${
-                            p.stock === 0
-                              ? "bg-gray-100 text-gray-400 cursor-not-allowed dark:bg-slate-800"
-                              : "bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white dark:bg-blue-900/30 dark:hover:bg-blue-500 dark:hover:text-white"
-                          }`}
-                          title={p.stock === 0 ? "غير متوفر" : "أضف للسلة"}
-                        >
-                          <ShoppingCart className="h-5 w-5" />
-                        </motion.button>
+                      {/* Action Buttons */}
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                          <WishlistButton productId={p.id} productImage={p.image} />
+                        </div>
+                        <div className="flex-1 flex justify-end">
+                          <motion.button
+                            whileHover={p.stock > 0 ? { scale: 1.05 } : {}}
+                            whileTap={p.stock > 0 ? { scale: 0.95 } : {}}
+                            onClick={(e) => {
+                              addToCart(p, 1);
+                              flyToCart(e, p.image);
+                            }}
+                            disabled={p.stock === 0}
+                            className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl transition-colors shadow-sm w-full ${
+                              p.stock === 0
+                                ? "bg-gray-100 text-gray-400 cursor-not-allowed dark:bg-slate-800"
+                                : "bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white dark:bg-blue-900/30 dark:hover:bg-blue-500 dark:hover:text-white"
+                            }`}
+                            title={p.stock === 0 ? "غير متوفر" : "أضف للسلة"}
+                          >
+                            <ShoppingCart className="h-5 w-5" />
+                            <span className="font-semibold text-sm">أضف للسلة</span>
+                          </motion.button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-
-                  <ReactionBar productId={p.id} />
                 </div>
               </motion.div>
             ))}
@@ -173,3 +174,6 @@ const FeaturedProducts = () => {
 };
 
 export default FeaturedProducts;
+
+
+
