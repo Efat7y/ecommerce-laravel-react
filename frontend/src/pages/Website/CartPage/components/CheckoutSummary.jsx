@@ -4,6 +4,7 @@ import { LogIn, Send } from "lucide-react";
 export default function CheckoutSummary({
   subtotal,
   totalFlashSavings,
+  originalSubtotal,
   shippingFee,
   discount,
   finalTotal,
