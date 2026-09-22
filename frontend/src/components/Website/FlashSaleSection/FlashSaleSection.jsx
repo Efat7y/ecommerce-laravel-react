@@ -137,7 +137,7 @@ export default function FlashSaleSection() {
             slidesPerView={1}
             navigation={{ nextEl: ".custom-next", prevEl: ".custom-prev" }}
             loop={true}
-            autoplay={{ delay: 3000, disableOnInteraction: false }}
+            autoplay={{ delay: 10000, disableOnInteraction: false }}
             breakpoints={{
               640: { slidesPerView: 1 },
               768: { slidesPerView: 3 },
