@@ -145,18 +145,7 @@ export default function FlashSaleManager() {
           onSubmit={handleCreate}
           className="flex flex-wrap gap-4 items-end"
         >
-                      <div className="flex-1 min-w-[200px]">
-              <label className="block text-sm mb-1 text-gray-600 dark:text-gray-400">
-                وقت ظهور المنتجات (ترقب السعر) (اختياري)
-              </label>
-              <input
-                type="datetime-local"
-                value={productsRevealTime}
-                onChange={(e) => setProductsRevealTime(e.target.value)}
-                className="w-full border rounded-lg p-2 dark:bg-gray-700 dark:border-gray-600"
-              />
-            </div>
-<div className="flex-1 min-w-[200px]">
+          <div className="flex-1 min-w-[200px]">
             <label className="block text-sm mb-1 text-gray-600 dark:text-gray-400">
               عنوان العرض
             </label>
@@ -170,19 +159,30 @@ export default function FlashSaleManager() {
           </div>
           <div className="flex-1 min-w-[250px]">
             <label className="block text-sm mb-1 text-gray-600 dark:text-gray-400">
-              الوصف التشويقي (قبل البدء)
+              الوصف التشويقي
             </label>
             <input
               type="text"
               value={teaserDescription}
               onChange={(e) => setTeaserDescription(e.target.value)}
               className="w-full border rounded-lg p-2 dark:bg-gray-700 dark:border-gray-600"
-              placeholder="مثال: تبدأ الخصومات الكبرى قريباً!"
+              placeholder="مثال: تبدأ الخصومات قريباً!"
             />
           </div>
           <div className="flex-1 min-w-[200px]">
-            <label className="block text-sm mb-1 text-gray-600 dark:text-gray-400">
-              وقت وتاريخ البدء (اختياري)
+            <label className="block text-sm mb-1 font-bold text-blue-600 dark:text-blue-400">
+              وقت البدء
+            </label>
+            <input
+              type="datetime-local"
+              value={productsRevealTime}
+              onChange={(e) => setProductsRevealTime(e.target.value)}
+              className="w-full border rounded-lg p-2 dark:bg-gray-700 dark:border-gray-600"
+            />
+          </div>
+          <div className="flex-1 min-w-[200px]">
+            <label className="block text-sm mb-1 font-bold text-green-600 dark:text-green-400">
+              وقت فتح القفل
             </label>
             <input
               type="datetime-local"
@@ -192,8 +192,8 @@ export default function FlashSaleManager() {
             />
           </div>
           <div className="flex-1 min-w-[200px]">
-            <label className="block text-sm mb-1 text-gray-600 dark:text-gray-400">
-              وقت وتاريخ الانتهاء
+            <label className="block text-sm mb-1 font-bold text-red-600 dark:text-red-400">
+              وقت انتهاء العرض
             </label>
             <input
               type="datetime-local"
