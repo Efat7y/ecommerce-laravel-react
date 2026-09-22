@@ -54,7 +54,7 @@ export default function FlashSaleSection() {
   const handleAddToCart = (e, product, flashPrice, isOutOfStock) => {
     e.preventDefault();
     if (isEnded || isPriceTeaser || isOutOfStock) return;
-    addToCart({ ...product, price: flashPrice });
+    addToCart({ ...product, price: flashPrice, original_price: product.price });
     flyToCart(e, product.image);
   };
 

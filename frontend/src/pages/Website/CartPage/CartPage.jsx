@@ -10,6 +10,7 @@ export default function CartPage() {
     cartItems,
     updateQuantity,
     subtotal,
+    totalFlashSavings,
     discount,
     total,
     shippingFee,
@@ -71,6 +72,7 @@ export default function CartPage() {
 
             <CheckoutSummary
               subtotal={subtotal}
+              totalFlashSavings={totalFlashSavings}
               shippingFee={shippingFee}
               discount={discount}
               finalTotal={finalTotal}

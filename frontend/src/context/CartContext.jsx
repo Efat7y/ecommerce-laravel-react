@@ -92,6 +92,7 @@ export const CartProvider = ({ children }) => {
     setAppliedCoupon(null);
   };
 
+  
   // Calculations
   const subtotal = cartItems.reduce((sum, item) => {
     if (item && item.product && item.product.price) {
@@ -99,6 +100,17 @@ export const CartProvider = ({ children }) => {
     }
     return sum;
   }, 0);
+
+  const originalSubtotal = cartItems.reduce((sum, item) => {
+    if (item && item.product && item.product.price) {
+      const origPrice = item.product.original_price ? Number(item.product.original_price) : Number(item.product.price);
+      return sum + origPrice * Number(item.quantity || 1);
+    }
+    return sum;
+  }, 0);
+
+  const totalFlashSavings = originalSubtotal > subtotal ? originalSubtotal - subtotal : 0;
+
 
   // Auto-remove coupon if subtotal falls below min_order_value
   useEffect(() => {
@@ -131,6 +143,8 @@ export const CartProvider = ({ children }) => {
         removeFromCart,
         clearCart,
         subtotal,
+        originalSubtotal,
+        totalFlashSavings,
         discount,
         total,
         appliedCoupon,
