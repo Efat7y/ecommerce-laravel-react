@@ -44,7 +44,7 @@ export default function LandingPage() {
       {/* Featured Products */}
       <FeaturedProducts />
 
-      <SmartFormulaCalculator />
+      {settings?.feature_formulas === "true" && <SmartFormulaCalculator />}
       {/* Trust Badges */}
       <TrustBadges />
 

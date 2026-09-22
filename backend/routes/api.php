@@ -43,6 +43,10 @@ Route::get('/formulas', [App\Http\Controllers\FormulaController::class, 'getActi
 Route::post('/coupons/apply', [CouponController::class, 'apply']);
 Route::get('/coupons/eligible', [CouponController::class, 'eligible']);
 
+// Smart Calculator Public Routes
+Route::get('/smart-calculator/materials', [App\Http\Controllers\SmartCalculatorController::class, 'getMaterials']);
+Route::get('/smart-calculator/recipes', [App\Http\Controllers\SmartCalculatorController::class, 'getRecipes']);
+
 // Authenticated Routes
 Route::middleware('auth:sanctum')->group(function () {
     
@@ -55,6 +59,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/orders', [OrderController::class, 'index']);
     Route::get('/orders/{id}', [OrderController::class, 'show']);
     Route::put('/orders/{id}', [OrderController::class, 'update']);
+
+        // Smart Calculator Admin Routes
+    Route::post('/smart-calculator/materials', [App\Http\Controllers\SmartCalculatorController::class, 'storeMaterial']);
+    Route::put('/smart-calculator/materials/{id}', [App\Http\Controllers\SmartCalculatorController::class, 'updateMaterial']);
+    Route::delete('/smart-calculator/materials/{id}', [App\Http\Controllers\SmartCalculatorController::class, 'destroyMaterial']);
+    Route::post('/smart-calculator/recipes', [App\Http\Controllers\SmartCalculatorController::class, 'storeRecipe']);
 
     // Admin Specific Routes (Role check is enforced inside controllers)
     Route::post('/categories', [CategoryController::class, 'store']);
