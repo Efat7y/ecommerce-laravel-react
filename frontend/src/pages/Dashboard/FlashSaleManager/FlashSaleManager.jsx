@@ -84,6 +84,7 @@ export default function FlashSaleManager() {
       (sale.products || []).map((p) => ({
         product_id: p.id,
         discount_price: p.pivot?.discount_price || p.price,
+        flash_quantity: p.pivot?.flash_quantity || "",
       }))
     );
   };
@@ -92,7 +93,7 @@ export default function FlashSaleManager() {
     if (saleProducts.find((p) => p.product_id === productId)) return;
     setSaleProducts([
       ...saleProducts,
-      { product_id: productId, discount_price: originalPrice },
+      { product_id: productId, discount_price: originalPrice, flash_quantity: "" },
     ]);
   };
 
@@ -100,6 +101,15 @@ export default function FlashSaleManager() {
     setSaleProducts(
       saleProducts.map((p) =>
         p.product_id === productId ? { ...p, discount_price: price } : p
+      )
+    );
+  };
+
+  
+  const updateSaleProductQuantity = (productId, qty) => {
+    setSaleProducts(
+      saleProducts.map((p) =>
+        p.product_id === productId ? { ...p, flash_quantity: qty } : p
       )
     );
   };

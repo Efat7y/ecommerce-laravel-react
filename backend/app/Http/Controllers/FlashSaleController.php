@@ -111,6 +111,7 @@ class FlashSaleController extends Controller
             'products' => 'required|array',
             'products.*.product_id' => 'required|exists:products,id',
             'products.*.discount_price' => 'required|numeric|min:0',
+            'products.*.flash_quantity' => 'nullable|integer|min:1',
         ]);
 
         $flashSale = FlashSale::findOrFail($id);
@@ -126,6 +127,8 @@ class FlashSaleController extends Controller
                     'flash_sale_id' => $flashSale->id,
                     'product_id' => $prod['product_id'],
                     'discount_price' => $prod['discount_price'],
+                    'flash_quantity' => $prod['flash_quantity'] ?? null,
+                    'flash_sold' => 0,
                 ]);
             }
             DB::commit();

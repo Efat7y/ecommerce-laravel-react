@@ -54,6 +54,11 @@ class OrderController extends Controller
                             ->first();
                         if ($flashSaleProduct) {
                             $actualPrice = $flashSaleProduct->discount_price;
+                            if ($flashSaleProduct->flash_quantity !== null) {
+                                // Prevent exceeding available flash quantity if desired, 
+                                // but for now just increment flash_sold
+                                $flashSaleProduct->increment('flash_sold', $item['quantity']);
+                            }
                         }
                     }
 
