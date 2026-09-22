@@ -29,6 +29,7 @@ class OrderController extends Controller
         try {
             $order = DB::transaction(function () use ($request, $user) {
                 $subtotal = 0;
+                $totalFlashDiscount = 0;
                 $itemsToCreate = [];
 
                 foreach ($request->items as $itemData) {
@@ -62,19 +63,25 @@ class OrderController extends Controller
                         }
                     }
 
-                    $itemTotal = $actualPrice * $itemData['quantity'];
-                    $subtotal += $itemTotal;
+                                        $itemTotal = $actualPrice * $itemData['quantity'];
+                    $originalItemTotal = $product->price * $itemData['quantity'];
+                    
+                    // Add the original price to the subtotal
+                    $subtotal += $originalItemTotal;
+                    
+                    // Accumulate the flash sale savings
+                    $totalFlashDiscount += ($originalItemTotal - $itemTotal);
 
                     $itemsToCreate[] = [
                         'product_id' => $product->id,
                         'quantity' => $itemData['quantity'],
-                        'price' => $actualPrice,
-                        'total_price' => $itemTotal,
+                        'price' => $product->price, // Store original price
+                        'total_price' => $originalItemTotal, // Store original total
                     ];
                 }
 
                 // Check and apply dynamic coupon
-                $discount = 0;
+                $discount = $totalFlashDiscount;
                 $coupon_id = null;
                 
                 if ($request->has('coupon_code')) {
@@ -94,14 +101,15 @@ class OrderController extends Controller
                         
                         if ($isValid) {
                             $coupon_id = $coupon->id;
-                            if ($coupon->type === 'fixed') {
-                                $discount = min($coupon->value, $subtotal);
+                                                        if ($coupon->type === 'fixed') {
+                                $couponDiscount = min($coupon->value, $subtotal - $totalFlashDiscount);
                             } else {
-                                $discount = ($coupon->value / 100) * $subtotal;
-                                if ($coupon->max_discount !== null && $discount > $coupon->max_discount) {
-                                    $discount = $coupon->max_discount;
+                                $couponDiscount = ($coupon->value / 100) * ($subtotal - $totalFlashDiscount);
+                                if ($coupon->max_discount !== null && $couponDiscount > $coupon->max_discount) {
+                                    $couponDiscount = $coupon->max_discount;
                                 }
                             }
+                            $discount += $couponDiscount;
                             
                             // Increment usage
                             $coupon->increment('used_count');
