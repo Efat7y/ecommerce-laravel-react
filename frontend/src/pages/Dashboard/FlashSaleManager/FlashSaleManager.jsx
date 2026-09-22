@@ -378,19 +378,37 @@ export default function FlashSaleManager() {
                           <span className="line-through text-gray-500">
                             {prod.price} ج.م
                           </span>
-                          <div className="flex items-center gap-2">
-                            <span>سعر العرض:</span>
-                            <input
-                              type="number"
-                              value={sp.discount_price}
-                              onChange={(e) =>
-                                updateSaleProductPrice(
-                                  sp.product_id,
-                                  e.target.value
-                                )
-                              }
-                              className="w-20 p-1 border rounded text-center dark:bg-gray-600"
-                            />
+                          <div className="flex flex-col gap-2 mt-2">
+                            <div className="flex items-center gap-2 justify-end">
+                              <span>السعر:</span>
+                              <input
+                                type="number"
+                                value={sp.discount_price}
+                                onChange={(e) =>
+                                  updateSaleProductPrice(
+                                    sp.product_id,
+                                    e.target.value
+                                  )
+                                }
+                                className="w-20 p-1 border rounded text-center dark:bg-gray-600"
+                              />
+                            </div>
+                            <div className="flex items-center gap-2 justify-end">
+                              <span>الكمية:</span>
+                              <input
+                                type="number"
+                                min="1"
+                                placeholder="الكل"
+                                value={sp.flash_quantity || ""}
+                                onChange={(e) =>
+                                  updateSaleProductQuantity(
+                                    sp.product_id,
+                                    e.target.value
+                                  )
+                                }
+                                className="w-20 p-1 border rounded text-center dark:bg-gray-600"
+                              />
+                            </div>
                           </div>
                         </div>
                       </div>
