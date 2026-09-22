@@ -15,7 +15,7 @@ import FeaturedProducts from "@/components/Website/FeaturedProducts/FeaturedProd
 import TrustBadges from "@/components/Website/TrustBadges/TrustBadges";
 import HeroSection from "@/components/Website/HeroSection/HeroSection";
 import FlashSaleSection from "@/components/Website/FlashSaleSection/FlashSaleSection";
-import FormulaSection from "@/components/Website/FormulaSection";
+import SmartFormulaCalculator from "@/components/Website/SmartFormulaCalculator/SmartFormulaCalculator";
 
 export default function LandingPage() {
   const { settings } = useSettings();
@@ -44,7 +44,7 @@ export default function LandingPage() {
       {/* Featured Products */}
       <FeaturedProducts />
 
-      <FormulaSection />
+      <SmartFormulaCalculator />
       {/* Trust Badges */}
       <TrustBadges />
 
