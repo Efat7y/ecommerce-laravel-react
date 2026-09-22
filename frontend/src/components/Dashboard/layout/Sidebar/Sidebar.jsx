@@ -41,10 +41,16 @@ export default function Sidebar({ isOpen, onClose }) {
       icon: Timer,
       adminOnly: true,
     },
-    {
-      name: "إدارة التركيبات",
+        {
+      name: "إدارة التركيبات القديمة",
       path: "/dashboard/formulas",
       icon: Store,
+      adminOnly: true,
+    },
+    {
+      name: "أسعار خامات الحاسبة",
+      path: "/dashboard/smart-calculator",
+      icon: Beaker,
       adminOnly: true,
     },
     { name: "الكوبونات والخصومات", path: "/dashboard/coupons", icon: Ticket },

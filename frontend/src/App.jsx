@@ -2,6 +2,7 @@ import { useSettings } from "./context/SettingsContext";
 import { ShoppingBag } from "lucide-react";
 import FlashSaleManager from './pages/Dashboard/FlashSaleManager/FlashSaleManager';
 import FormulaManager from './pages/Dashboard/FormulaManager/FormulaManager';
+import SmartCalculatorManager from './pages/Dashboard/SmartCalculatorManager/SmartCalculatorManager';
 import { Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import PageTransition from "./components/PageTransition";
@@ -118,6 +119,7 @@ function App() {
         <Route path="customers" element={<CustomersManager />} />
         <Route path="flash-sales" element={<FlashSaleManager />} />
         <Route path="formulas" element={<FormulaManager />} />
+          <Route path="smart-calculator" element={<SmartCalculatorManager />} />
         <Route path="coupons" element={<CouponManager />} />
         <Route path="messages" element={<MessagesManager />} />
         <Route path="settings" element={<SettingsManager />} />
