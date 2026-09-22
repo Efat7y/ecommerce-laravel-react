@@ -7,13 +7,13 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { baseUrl } from "../../../Api/Api";
 import { Link } from "react-router-dom";
-import { ShoppingCart, Flame, Lock, Clock } from "lucide-react";
+import { ShoppingCart, Flame, Lock, Clock, AlertCircle } from "lucide-react";
 import { useCart } from "../../../context/CartContext";
 import { flyToCart } from "../../../utils/animations";
 
 export default function FlashSaleSection() {
   const { flashSale, isLoading } = useFlashSale();
-  const { addToCart } = useCart();
+  const { cart, addToCart } = useCart();
   const [currentTime, setCurrentTime] = useState(Date.now());
 
   // Update current time every second to trigger state changes automatically
@@ -45,31 +45,24 @@ export default function FlashSaleSection() {
   // If time completely passed the grace period, hide the section
   if (isFullyExpired) return null;
   
-  // Teaser 1: Pure Teaser (Banner only)
+  // Teaser 1: Pure Teaser (Banner only). Current time is before products reveal.
   const isPureTeaser = revealTimeMs > 0 ? currentTime < revealTimeMs : (startTimeMs > 0 && currentTime < startTimeMs);
   
-  // Teaser 2: Price Teaser (Products shown, prices locked)
+  // Teaser 2: Price Teaser (Products shown, prices locked). Current time is after reveal but before start.
   const isPriceTeaser = revealTimeMs > 0 && startTimeMs > 0 && currentTime >= revealTimeMs && currentTime < startTimeMs;
   
-  // Timer selection
-  let currentTimerEnd = flashSale.end_time;
-  if (isPureTeaser) {
-    currentTimerEnd = flashSale.products_reveal_time || flashSale.start_time;
-  } else if (isPriceTeaser) {
-    currentTimerEnd = flashSale.start_time;
-  }
-
-  const handleAddToCart = (e, product, flashPrice) => {
+  const handleAddToCart = (e, product, flashPrice, isOutOfStock) => {
     e.preventDefault();
-    if (isEnded || isPriceTeaser) return; // Prevent adding if ended or locked
+    if (isEnded || isPriceTeaser || isOutOfStock) return;
     addToCart({ ...product, price: flashPrice });
     flyToCart(e, product.image);
   };
 
   // -------------------------------------------------------------
-  // STATE 1: PURE TEASER (Banner only)
+  // STATE 1: PURE TEASER (Banner only) - Timer 1
   // -------------------------------------------------------------
   if (isPureTeaser) {
+    const bannerTimerEnd = flashSale.products_reveal_time || flashSale.start_time;
     return (
       <section className="py-16 bg-slate-900 overflow-hidden relative border-y-4 border-red-600">
         <div className="container mx-auto px-4 text-center relative z-10">
@@ -84,11 +77,10 @@ export default function FlashSaleSection() {
               "تبدأ الخصومات الكبرى قريباً، استعدوا لمفاجأة لن تتكرر!"}
           </p>
           <div className="flex justify-center bg-white/5 p-6 rounded-2xl max-w-xl mx-auto backdrop-blur-sm border border-white/10">
-            <CountdownTimer endTime={currentTimerEnd} />
+            {/* Timer 1: Counts to product reveal */}
+            <CountdownTimer endTime={bannerTimerEnd} />
           </div>
         </div>
-
-        {/* Background Decorative Elements */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-20 pointer-events-none">
           <div className="absolute -top-20 -right-20 w-64 h-64 bg-red-600 rounded-full blur-3xl"></div>
           <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-orange-600 rounded-full blur-3xl"></div>
@@ -98,8 +90,9 @@ export default function FlashSaleSection() {
   }
 
   // -------------------------------------------------------------
-  // STATE 2 & 3: ACTIVE SALE or FOMO (Ended but visible)
+  // STATE 2 & 3: ACTIVE SALE or PRICE TEASER
   // -------------------------------------------------------------
+  // Global Timer 3: Always counts to end_time if sale has started.
   return (
     <section
       className={`py-12 overflow-hidden relative transition-colors duration-1000 ${isEnded ? "bg-gray-100 dark:bg-gray-900/40" : "bg-red-50 dark:bg-red-900/10"}`}
@@ -120,18 +113,21 @@ export default function FlashSaleSection() {
               <h2
                 className={`text-3xl font-bold mb-2 ${isEnded ? "text-gray-500 dark:text-gray-400" : "text-gray-900 dark:text-white"}`}
               >
-                {isEnded ? "انتهى العرض ⏰" : isPriceTeaser ? "ترقبوا العرض ⏳" : flashSale.title || "عرض فلاش سيل ⚡"}
+                {isEnded ? "انتهى العرض ⏰" : isPriceTeaser ? "ترقبوا الأسعار ⏳" : flashSale.title || "عرض فلاش سيل ⚡"}
               </h2>
               <p
                 className={
                   isEnded ? "text-gray-500" : "text-gray-600 dark:text-gray-400"
                 }
               >
-                {isEnded ? "لقد فاتك هذا العرض، ترقب عروضنا القادمة!" : isPriceTeaser ? "سيتم فتح قفل السعر قريباً، استعد!" : "سارع قبل نفاد الكمية أو انتهاء الوقت!"}
+                {isEnded ? "لقد فاتك هذا العرض، ترقب عروضنا القادمة!" : isPriceTeaser ? "سيتم فتح قفل السعر قريباً، استعد للمفاجأة!" : "سارع قبل نفاد الكمية أو انتهاء الوقت!"}
               </p>
             </div>
           </div>
-          <CountdownTimer endTime={currentTimerEnd} />
+          {/* Global Timer 3 counts to End Time */}
+          {!isEnded && !isPriceTeaser && (
+             <CountdownTimer endTime={flashSale.end_time} />
+          )}
         </div>
 
         <div className="relative">
@@ -153,8 +149,18 @@ export default function FlashSaleSection() {
           >
             {flashSale.products.map((product) => {
               const flashPrice = product.pivot.discount_price;
-              const flashQty = product.pivot.flash_quantity;
-              const flashSold = product.pivot.flash_sold || 0;
+              
+              // Handle quantity calculations dynamically with Cart
+              const flashQty = product.pivot.flash_quantity ? parseInt(product.pivot.flash_quantity) : null;
+              const flashSold = product.pivot.flash_sold ? parseInt(product.pivot.flash_sold) : 0;
+              
+              const cartItem = cart.find(item => item.id === product.id);
+              const cartQuantity = cartItem ? cartItem.quantity : 0;
+              
+              const totalSold = flashSold + cartQuantity;
+              const remaining = flashQty !== null ? Math.max(0, flashQty - totalSold) : null;
+              const isOutOfStock = remaining !== null && remaining <= 0;
+
               const discountPercentage = Math.round(
                 ((product.price - flashPrice) / product.price) * 100,
               );
@@ -162,12 +168,12 @@ export default function FlashSaleSection() {
               return (
                 <SwiperSlide key={product.id}>
                   <div
-                    className={`bg-white dark:bg-slate-800 rounded-2xl shadow-sm border overflow-hidden group hover:shadow-xl transition-all h-full flex flex-col relative ${isEnded ? "border-gray-200 dark:border-gray-700 opacity-80 grayscale-[50%]" : "border-red-100 dark:border-red-900/30"}`}
+                    className={`bg-white dark:bg-slate-800 rounded-2xl shadow-sm border overflow-hidden group hover:shadow-xl transition-all h-full flex flex-col relative ${isEnded || isOutOfStock ? "border-gray-200 dark:border-gray-700 opacity-80 grayscale-[50%]" : "border-red-100 dark:border-red-900/30"}`}
                   >
                     <div
-                      className={`absolute top-3 right-3 text-white text-xs font-bold px-2 py-1 rounded-lg z-10 ${isEnded ? "bg-gray-500" : "bg-red-600"}`}
+                      className={`absolute top-3 right-3 text-white text-xs font-bold px-2 py-1 rounded-lg z-10 ${isEnded || isOutOfStock ? "bg-gray-500" : "bg-red-600"}`}
                     >
-                      {isEnded ? "فاتك العرض" : isPriceTeaser ? "مفاجأة قريباً" : `خصم ${discountPercentage}%`}
+                      {isEnded ? "فاتك العرض" : isPriceTeaser ? "مفاجأة قريباً" : isOutOfStock ? "نفذت الكمية" : `خصم ${discountPercentage}%`}
                     </div>
 
                     <Link
@@ -188,7 +194,7 @@ export default function FlashSaleSection() {
                     <div className="p-4 flex flex-col flex-grow">
                       <Link to={`/products/${product.id}`}>
                         <h3
-                          className={`font-semibold mb-2 line-clamp-2 transition-colors ${isEnded ? "text-gray-500 dark:text-gray-400" : "text-gray-900 dark:text-white group-hover:text-red-600"}`}
+                          className={`font-semibold mb-2 line-clamp-2 transition-colors ${isEnded || isOutOfStock ? "text-gray-500 dark:text-gray-400" : "text-gray-900 dark:text-white group-hover:text-red-600"}`}
                         >
                           {product.name}
                         </h3>
@@ -197,18 +203,22 @@ export default function FlashSaleSection() {
                       <div className="mt-auto">
                         <div className="flex items-center gap-2 mb-4">
                           {isPriceTeaser ? (
-                            <div className="flex items-center justify-center w-full bg-slate-100 dark:bg-slate-700 py-2 rounded-lg gap-2">
-                              <Lock className="w-5 h-5 text-slate-500" />
-                              <span className="text-sm font-bold text-slate-600 dark:text-slate-300">السعر مغلق مؤقتاً</span>
+                            <div className="flex flex-col items-center justify-center w-full bg-slate-100 dark:bg-slate-700 py-3 rounded-lg gap-2">
+                              <div className="flex items-center gap-2">
+                                <Lock className="w-5 h-5 text-slate-500" />
+                                <span className="text-sm font-bold text-slate-600 dark:text-slate-300">السعر مغلق مؤقتاً</span>
+                              </div>
+                              {/* Timer 2: Counts to Price Unlock */}
+                              <CountdownTimer endTime={flashSale.start_time} small={true} />
                             </div>
                           ) : (
                             <>
                               <span
-                                className={`text-xl font-bold ${isEnded ? "text-gray-500 line-through" : "text-red-600 dark:text-red-400"}`}
+                                className={`text-xl font-bold ${isEnded || isOutOfStock ? "text-gray-500 line-through" : "text-red-600 dark:text-red-400"}`}
                               >
                                 {flashPrice} ج.م
                               </span>
-                              {!isEnded && (
+                              {!isEnded && !isOutOfStock && (
                                 <span className="text-sm text-gray-400 line-through">
                                   {product.price} ج.م
                                 </span>
@@ -218,27 +228,31 @@ export default function FlashSaleSection() {
                         </div>
 
                         {/* Quantity Indicator */}
-                        {!isEnded && flashQty && (
+                        {!isEnded && !isPriceTeaser && flashQty !== null && (
                           <div className="mb-3">
                             <div className="flex justify-between text-xs mb-1 font-bold text-gray-500 dark:text-gray-400">
-                              <span>تم بيع {flashSold}</span>
-                              <span className="text-red-600">متاح {flashQty - flashSold} فقط!</span>
+                              <span>تم بيع {totalSold}</span>
+                              <span className={`${isOutOfStock ? "text-red-600 font-bold" : "text-orange-600"}`}>
+                                {isOutOfStock ? "نفذت الكمية!" : `متبقي ${remaining}`}
+                              </span>
                             </div>
                             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                               <div
-                                className="bg-gradient-to-r from-red-500 to-orange-500 h-2 rounded-full"
-                                style={{ width: `${Math.min((flashSold / flashQty) * 100, 100)}%` }}
+                                className="bg-gradient-to-r from-red-500 to-orange-500 h-2 rounded-full transition-all duration-300"
+                                style={{ width: `${Math.min((totalSold / flashQty) * 100, 100)}%` }}
                               ></div>
                             </div>
                           </div>
                         )}
 
                         <button
-                          onClick={(e) =>
-                            handleAddToCart(e, product, flashPrice)
-                          }
-                          disabled={isEnded || isPriceTeaser}
-                          className={`w-full text-white py-2.5 rounded-xl font-medium transition-colors flex items-center justify-center gap-2 ${isEnded || isPriceTeaser ? "bg-gray-400 cursor-not-allowed dark:bg-slate-700" : "bg-red-600 hover:bg-red-700"}`}
+                          onClick={(e) => handleAddToCart(e, product, flashPrice, isOutOfStock)}
+                          disabled={isEnded || isPriceTeaser || isOutOfStock}
+                          className={`w-full text-white py-2.5 rounded-xl font-medium transition-colors flex items-center justify-center gap-2 ${
+                            isEnded || isPriceTeaser || isOutOfStock
+                              ? "bg-gray-400 cursor-not-allowed dark:bg-slate-700" 
+                              : "bg-red-600 hover:bg-red-700"
+                          }`}
                         >
                           {isEnded ? (
                             <>
@@ -247,6 +261,10 @@ export default function FlashSaleSection() {
                           ) : isPriceTeaser ? (
                             <>
                               <Lock className="w-5 h-5" /> السلة مغلقة
+                            </>
+                          ) : isOutOfStock ? (
+                            <>
+                              <AlertCircle className="w-5 h-5" /> تم نفاذ الكمية
                             </>
                           ) : (
                             <>

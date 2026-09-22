@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-export default function CountdownTimer({ endTime }) {
+export default function CountdownTimer({ endTime, small = false }) {
     const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
     function calculateTimeLeft() {
@@ -32,21 +32,34 @@ export default function CountdownTimer({ endTime }) {
             return;
         }
 
-        timerComponents.push(
-            <div key={interval} className="flex flex-col items-center justify-center bg-red-600 text-white w-14 h-14 md:w-16 md:h-16 rounded-xl shadow-lg">
-                <span className="text-xl md:text-2xl font-bold">{timeLeft[interval].toString().padStart(2, '0')}</span>
-                <span className="text-xs uppercase opacity-80">{
-                    interval === 'days' ? 'أيام' :
-                    interval === 'hours' ? 'ساعات' :
-                    interval === 'minutes' ? 'دقائق' : 'ثواني'
-                }</span>
-            </div>
-        );
+        if (small) {
+            timerComponents.push(
+                <div key={interval} className="flex flex-col items-center justify-center bg-slate-800 text-white w-9 h-9 rounded shadow-sm">
+                    <span className="text-sm font-bold leading-none">{timeLeft[interval].toString().padStart(2, '0')}</span>
+                    <span className="text-[9px] uppercase opacity-80 mt-0.5">{
+                        interval === 'days' ? 'يوم' :
+                        interval === 'hours' ? 'ساعة' :
+                        interval === 'minutes' ? 'دقيقة' : 'ثانية'
+                    }</span>
+                </div>
+            );
+        } else {
+            timerComponents.push(
+                <div key={interval} className="flex flex-col items-center justify-center bg-red-600 text-white w-14 h-14 md:w-16 md:h-16 rounded-xl shadow-lg">
+                    <span className="text-xl md:text-2xl font-bold">{timeLeft[interval].toString().padStart(2, '0')}</span>
+                    <span className="text-xs uppercase opacity-80">{
+                        interval === 'days' ? 'يوم' :
+                        interval === 'hours' ? 'ساعة' :
+                        interval === 'minutes' ? 'دقيقة' : 'ثانية'
+                    }</span>
+                </div>
+            );
+        }
     });
 
     return (
-        <div className="flex gap-2 md:gap-4 items-center justify-center md:justify-start" dir="ltr">
-            {timerComponents.length ? timerComponents : <span className="text-red-500 font-bold">انتهى العرض!</span>}
+        <div className={`flex ${small ? 'gap-1' : 'gap-2 md:gap-4'} items-center justify-center md:justify-start`} dir="ltr">
+            {timerComponents.length ? timerComponents : <span className="text-red-500 font-bold">جاري التحميل...</span>}
         </div>
     );
 }
