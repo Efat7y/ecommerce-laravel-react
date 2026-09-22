@@ -17,6 +17,7 @@ export default function FlashSaleManager() {
   } = useFlashSaleManager();
   const [title, setTitle] = useState("");
   const [teaserDescription, setTeaserDescription] = useState("");
+  const [productsRevealTime, setProductsRevealTime] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [isActive, setIsActive] = useState(true);
@@ -29,6 +30,7 @@ export default function FlashSaleManager() {
     setEditingSaleId(sale?.id);
     setTitle(sale?.title || "");
     setTeaserDescription(sale?.teaser_description || "");
+    setProductsRevealTime(sale?.products_reveal_time ? moment(sale.products_reveal_time).format("YYYY-MM-DDTHH:mm") : "");
     setStartTime(
       sale?.start_time ? moment(sale.start_time).format("YYYY-MM-DDTHH:mm") : ""
     );
@@ -43,6 +45,7 @@ export default function FlashSaleManager() {
     setEditingSaleId(null);
     setTitle("");
     setTeaserDescription("");
+    setProductsRevealTime("");
     setStartTime("");
     setEndTime("");
     setIsActive(true);
@@ -55,6 +58,7 @@ export default function FlashSaleManager() {
     const payload = {
       title,
       teaser_description: teaserDescription,
+      products_reveal_time: productsRevealTime || null,
       start_time: startTime || null,
       end_time: endTime,
       is_active: isActive,
@@ -67,6 +71,7 @@ export default function FlashSaleManager() {
       createFlashSale(payload);
       setTitle("");
       setTeaserDescription("");
+      setProductsRevealTime("");
       setStartTime("");
       setEndTime("");
     }

@@ -90,13 +90,13 @@ export default function FlashSaleSection() {
   // -------------------------------------------------------------
   return (
     <section
-      className={`py-12 overflow-hidden relative transition-colors duration-1000 ${isEnded ? "bg-gray-100 dark:bg-gray-900/40" : "bg-red-50 dark:bg-red-900/10"}`}
+      className={`py-12 overflow-hidden relative transition-colors duration-1000 ${isEnded ? "لقد فاتك هذا العرض، ترقب عروضنا القادمة!" : isPriceTeaser ? "سيتم فتح قفل السعر قريباً، استعد!" : "سارع قبل نفاد الكمية أو انتهاء الوقت!"}`}
     >
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-6">
           <div className="flex items-center gap-4">
             <div
-              className={`p-3 rounded-full ${isEnded ? "bg-gray-200 dark:bg-gray-800" : "bg-red-100 dark:bg-red-900/50"}`}
+              className={`p-3 rounded-full ${isEnded ? "لقد فاتك هذا العرض، ترقب عروضنا القادمة!" : isPriceTeaser ? "سيتم فتح قفل السعر قريباً، استعد!" : "سارع قبل نفاد الكمية أو انتهاء الوقت!"}`}
             >
               {isEnded ? (
                 <Clock className="w-8 h-8 text-gray-500 dark:text-gray-400" />
@@ -106,24 +106,20 @@ export default function FlashSaleSection() {
             </div>
             <div>
               <h2
-                className={`text-3xl font-bold mb-2 ${isEnded ? "text-gray-500 dark:text-gray-400" : "text-gray-900 dark:text-white"}`}
+                className={`text-3xl font-bold mb-2 ${isEnded ? "لقد فاتك هذا العرض، ترقب عروضنا القادمة!" : isPriceTeaser ? "سيتم فتح قفل السعر قريباً، استعد!" : "سارع قبل نفاد الكمية أو انتهاء الوقت!"}`}
               >
-                {isEnded
-                  ? "انتهى العرض 😔"
-                  : flashSale.title || "عروض فلاش سيل 🔥"}
+                {isEnded ? "انتهى العرض ⏰" : isPriceTeaser ? "ترقبوا العرض ⏳" : flashSale.title || "عرض فلاش سيل ⚡"}
               </h2>
               <p
                 className={
                   isEnded ? "text-gray-500" : "text-gray-600 dark:text-gray-400"
                 }
               >
-                {isEnded
-                  ? "لقد فاتتك هذه الخصومات، تابعنا لتلحق بالعروض القادمة!"
-                  : "سارع قبل نفاذ الكمية أو انتهاء الوقت!"}
+                {isEnded ? "لقد فاتك هذا العرض، ترقب عروضنا القادمة!" : isPriceTeaser ? "سيتم فتح قفل السعر قريباً، استعد!" : "سارع قبل نفاد الكمية أو انتهاء الوقت!"}
               </p>
             </div>
           </div>
-          <CountdownTimer endTime={flashSale.end_time} />
+          <CountdownTimer endTime={currentTimerEnd} />
         </div>
 
         <div className="relative">
@@ -152,12 +148,12 @@ export default function FlashSaleSection() {
               return (
                 <SwiperSlide key={product.id}>
                   <div
-                    className={`bg-white dark:bg-slate-800 rounded-2xl shadow-sm border overflow-hidden group hover:shadow-xl transition-all h-full flex flex-col relative ${isEnded ? "border-gray-200 dark:border-gray-700 opacity-80 grayscale-[50%]" : "border-red-100 dark:border-red-900/30"}`}
+                    className={`bg-white dark:bg-slate-800 rounded-2xl shadow-sm border overflow-hidden group hover:shadow-xl transition-all h-full flex flex-col relative ${isEnded ? "لقد فاتك هذا العرض، ترقب عروضنا القادمة!" : isPriceTeaser ? "سيتم فتح قفل السعر قريباً، استعد!" : "سارع قبل نفاد الكمية أو انتهاء الوقت!"}`}
                   >
                     <div
-                      className={`absolute top-3 right-3 text-white text-xs font-bold px-2 py-1 rounded-lg z-10 ${isEnded ? "bg-gray-500" : "bg-red-600"}`}
+                      className={`absolute top-3 right-3 text-white text-xs font-bold px-2 py-1 rounded-lg z-10 ${isEnded ? "لقد فاتك هذا العرض، ترقب عروضنا القادمة!" : isPriceTeaser ? "سيتم فتح قفل السعر قريباً، استعد!" : "سارع قبل نفاد الكمية أو انتهاء الوقت!"}`}
                     >
-                      {isEnded ? "فاتك الخصم" : `خصم ${discountPercentage}%`}
+                      {isEnded ? "فاتك العرض" : isPriceTeaser ? "مفاجأة قريباً" : `خصم ${discountPercentage}%`}
                     </div>
 
                     <Link
@@ -178,36 +174,49 @@ export default function FlashSaleSection() {
                     <div className="p-4 flex flex-col flex-grow">
                       <Link to={`/products/${product.id}`}>
                         <h3
-                          className={`font-semibold mb-2 line-clamp-2 transition-colors ${isEnded ? "text-gray-500 dark:text-gray-400" : "text-gray-900 dark:text-white group-hover:text-red-600"}`}
+                          className={`font-semibold mb-2 line-clamp-2 transition-colors ${isEnded ? "لقد فاتك هذا العرض، ترقب عروضنا القادمة!" : isPriceTeaser ? "سيتم فتح قفل السعر قريباً، استعد!" : "سارع قبل نفاد الكمية أو انتهاء الوقت!"}`}
                         >
                           {product.name}
                         </h3>
                       </Link>
 
                       <div className="mt-auto">
-                        <div className="flex items-center gap-2 mb-4">
-                          <span
-                            className={`text-xl font-bold ${isEnded ? "text-gray-500 line-through" : "text-red-600 dark:text-red-400"}`}
-                          >
-                            {flashPrice} ج.م
-                          </span>
-                          {!isEnded && (
-                            <span className="text-sm text-gray-400 line-through">
-                              {product.price} ج.م
-                            </span>
+                                                <div className="flex items-center gap-2 mb-4">
+                          {isPriceTeaser ? (
+                            <div className="flex items-center justify-center w-full bg-slate-100 dark:bg-slate-700 py-2 rounded-lg gap-2">
+                              <Lock className="w-5 h-5 text-slate-500" />
+                              <span className="text-sm font-bold text-slate-600 dark:text-slate-300">السعر مغلق مؤقتاً</span>
+                            </div>
+                          ) : (
+                            <>
+                              <span
+                                className={`text-xl font-bold ${isEnded ? "text-gray-500 line-through" : "text-red-600 dark:text-red-400"}`}
+                              >
+                                {flashPrice} ج.م
+                              </span>
+                              {!isEnded && (
+                                <span className="text-sm text-gray-400 line-through">
+                                  {product.price} ج.م
+                                </span>
+                              )}
+                            </>
                           )}
                         </div>
 
-                        <button
+                                                <button
                           onClick={(e) =>
                             handleAddToCart(e, product, flashPrice)
                           }
-                          disabled={isEnded}
-                          className={`w-full text-white py-2.5 rounded-xl font-medium transition-colors flex items-center justify-center gap-2 ${isEnded ? "bg-gray-400 cursor-not-allowed" : "bg-red-600 hover:bg-red-700"}`}
+                          disabled={isEnded || isPriceTeaser}
+                          className={`w-full text-white py-2.5 rounded-xl font-medium transition-colors flex items-center justify-center gap-2 ${isEnded || isPriceTeaser ? "bg-gray-400 cursor-not-allowed dark:bg-slate-700" : "bg-red-600 hover:bg-red-700"}`}
                         >
                           {isEnded ? (
                             <>
                               <Clock className="w-5 h-5" /> انتهى العرض
+                            </>
+                          ) : isPriceTeaser ? (
+                            <>
+                              <Lock className="w-5 h-5" /> السلة مغلقة
                             </>
                           ) : (
                             <>

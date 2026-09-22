@@ -41,6 +41,7 @@ class FlashSaleController extends Controller
         $request->validate([
             'title' => 'nullable|string',
             'teaser_description' => 'nullable|string',
+            'products_reveal_time' => 'nullable|date',
             'start_time' => 'nullable|date',
             'end_time' => 'required|date',
             'is_active' => 'boolean'
@@ -54,6 +55,8 @@ class FlashSaleController extends Controller
         $flashSale = FlashSale::create([
             'title' => $request->title,
             'teaser_description' => $request->teaser_description,
+            'products_reveal_time' => $request->products_reveal_time ? Carbon::parse($request->products_reveal_time) : null,
+            'products_reveal_time' => $request->products_reveal_time ? Carbon::parse($request->products_reveal_time) : null,
             'start_time' => $request->start_time ? Carbon::parse($request->start_time) : null,
             'end_time' => Carbon::parse($request->end_time),
             'is_active' => $request->is_active ?? true
@@ -72,6 +75,7 @@ class FlashSaleController extends Controller
         $request->validate([
             'title' => 'nullable|string',
             'teaser_description' => 'nullable|string',
+            'products_reveal_time' => 'nullable|date',
             'start_time' => 'nullable|date',
             'end_time' => 'required|date',
             'is_active' => 'boolean'
@@ -86,6 +90,8 @@ class FlashSaleController extends Controller
         $flashSale->update([
             'title' => $request->title,
             'teaser_description' => $request->teaser_description,
+            'products_reveal_time' => $request->products_reveal_time ? Carbon::parse($request->products_reveal_time) : null,
+            'products_reveal_time' => $request->products_reveal_time ? Carbon::parse($request->products_reveal_time) : null,
             'start_time' => $request->start_time ? Carbon::parse($request->start_time) : null,
             'end_time' => Carbon::parse($request->end_time),
             'is_active' => $request->is_active ?? true
