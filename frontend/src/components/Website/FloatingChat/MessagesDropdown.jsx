@@ -25,8 +25,10 @@ export default function MessagesDropdown() {
       const totalUnread = res.data.reduce((sum, conv) => sum + (conv.unread_count || 0), 0);
       setUnreadCount(totalUnread);
     } catch (err) {
-      // Ignore 401 to prevent console spam when unauthenticated
-      if (err.response && err.response.status !== 401) {
+      if (err.response && err.response.status === 401) {
+          localStorage.removeItem('token');
+          window.location.reload();
+      } else {
           console.error(err);
       }
     }

@@ -40,6 +40,8 @@ function ChatInstance({ chat, index, totalExpanded }) {
     } catch (err) {
       if (err.response && err.response.status === 401) {
           closeChat(chat.user.id);
+          localStorage.removeItem('token');
+          window.location.reload();
       }
     }
   };
