@@ -31,9 +31,22 @@ export default function CartItems({
             <p className="text-xs text-gray-400 mt-0.5">
               وحدة القياس: {item.product.unit}
             </p>
-            <p className="text-xs text-gray-500 mt-1 font-bold">
-              سعر الوحدة: {parseFloat(item.product.price).toLocaleString()} ج.م
-            </p>
+            
+            {item.product.original_price ? (
+              <div className="mt-1 space-y-0.5">
+                <p className="text-xs text-gray-400 line-through">
+                  السعر الأصلي: {parseFloat(item.product.original_price).toLocaleString()} ج.م
+                </p>
+                <p className="text-xs text-green-600 dark:text-green-400 font-bold">
+                  سعر العرض: {parseFloat(item.product.price).toLocaleString()} ج.م
+                </p>
+              </div>
+            ) : (
+              <p className="text-xs text-gray-500 mt-1 font-bold">
+                سعر الوحدة: {parseFloat(item.product.price).toLocaleString()} ج.م
+              </p>
+            )}
+
           </div>
 
           {/* Quantity & Actions */}

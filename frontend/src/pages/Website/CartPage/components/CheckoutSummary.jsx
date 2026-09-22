@@ -127,13 +127,35 @@ export default function CheckoutSummary({
           )}
         </div>
 
-        <div className="space-y-3 text-sm pb-4 border-b border-gray-100 dark:border-gray-800">
-          <div className="flex justify-between">
-            <span className="text-gray-500">المجموع الفرعي:</span>
-            <span className="font-semibold">
-              {parseFloat(subtotal).toLocaleString()} ج.م
-            </span>
-          </div>
+                <div className="space-y-3 text-sm pb-4 border-b border-gray-100 dark:border-gray-800">
+          {totalFlashSavings > 0 ? (
+            <>
+              <div className="flex justify-between">
+                <span className="text-gray-500">السعر قبل الخصم:</span>
+                <span className="font-semibold line-through text-gray-400">
+                  {parseFloat(originalSubtotal).toLocaleString()} ج.م
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-500">السعر بعد الخصم:</span>
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  {parseFloat(subtotal).toLocaleString()} ج.م
+                </span>
+              </div>
+              <div className="flex justify-between text-green-600 dark:text-green-400 font-bold bg-green-50 dark:bg-green-900/20 p-2 rounded-lg mt-2 mb-2">
+                <span>نسبة التوفير ({( (totalFlashSavings / originalSubtotal) * 100 ).toFixed(1)}%):</span>
+                <span>-{parseFloat(totalFlashSavings).toLocaleString()} ج.م</span>
+              </div>
+            </>
+          ) : (
+            <div className="flex justify-between">
+              <span className="text-gray-500">المجموع الفرعي:</span>
+              <span className="font-semibold">
+                {parseFloat(subtotal).toLocaleString()} ج.م
+              </span>
+            </div>
+          )}
+          
           <div className="flex justify-between">
             <span className="text-gray-500">مصاريف الشحن:</span>
             <span className="font-semibold text-blue-600">
