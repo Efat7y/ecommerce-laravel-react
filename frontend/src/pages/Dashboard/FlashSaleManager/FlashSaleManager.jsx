@@ -145,7 +145,18 @@ export default function FlashSaleManager() {
           onSubmit={handleCreate}
           className="flex flex-wrap gap-4 items-end"
         >
-          <div className="flex-1 min-w-[200px]">
+                      <div className="flex-1 min-w-[200px]">
+              <label className="block text-sm mb-1 text-gray-600 dark:text-gray-400">
+                وقت ظهور المنتجات (ترقب السعر) (اختياري)
+              </label>
+              <input
+                type="datetime-local"
+                value={productsRevealTime}
+                onChange={(e) => setProductsRevealTime(e.target.value)}
+                className="w-full border rounded-lg p-2 dark:bg-gray-700 dark:border-gray-600"
+              />
+            </div>
+<div className="flex-1 min-w-[200px]">
             <label className="block text-sm mb-1 text-gray-600 dark:text-gray-400">
               عنوان العرض
             </label>
