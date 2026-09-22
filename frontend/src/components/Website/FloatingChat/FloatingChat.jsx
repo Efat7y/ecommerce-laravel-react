@@ -22,6 +22,10 @@ function ChatInstance({ chat, index, totalExpanded }) {
   const fetchMessages = async () => {
     if (!chat.conversation) return;
     const token = getToken();
+    if (!token) {
+        closeChat(chat.user.id);
+        return;
+    }
     try {
       const res = await axios.get(`${baseUrl}/chat/conversations/${chat.conversation.id}/messages`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -34,7 +38,9 @@ function ChatInstance({ chat, index, totalExpanded }) {
         });
       }
     } catch (err) {
-      console.error(err);
+      if (err.response && err.response.status === 401) {
+          closeChat(chat.user.id);
+      }
     }
   };
 
