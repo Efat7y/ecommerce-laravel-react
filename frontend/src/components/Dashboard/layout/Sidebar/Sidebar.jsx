@@ -14,6 +14,7 @@ import {
   Mail,
   Timer,
   Store,
+  Beaker,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getUser } from "../../../../utils/auth";
