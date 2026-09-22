@@ -13,7 +13,7 @@ import { flyToCart } from "../../../utils/animations";
 
 export default function FlashSaleSection() {
   const { flashSale, isLoading } = useFlashSale();
-  const { cart, addToCart } = useCart();
+  const { cartItems, addToCart } = useCart();
   const [currentTime, setCurrentTime] = useState(Date.now());
 
   // Update current time every second to trigger state changes automatically
@@ -154,7 +154,7 @@ export default function FlashSaleSection() {
               const flashQty = product.pivot.flash_quantity ? parseInt(product.pivot.flash_quantity) : null;
               const flashSold = product.pivot.flash_sold ? parseInt(product.pivot.flash_sold) : 0;
               
-              const cartItem = cart.find(item => item.id === product.id);
+              const cartItem = (cartItems || []).find(item => item.product?.id === product.id);
               const cartQuantity = cartItem ? cartItem.quantity : 0;
               
               const totalSold = flashSold + cartQuantity;
