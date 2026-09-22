@@ -36,6 +36,7 @@ export default function SettingsManager() {
         if (result.value === 'dev2026') {
           setSettings({ ...settings, [featureKey]: isEnabling ? 'true' : 'false' });
           saveSection([featureKey], false, { [featureKey]: isEnabling ? 'true' : 'false' });
+          setTimeout(() => window.location.reload(), 500);
         } else {
           Swal.fire('خطأ', 'الرقم السري غير صحيح!', 'error');
         }
