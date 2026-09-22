@@ -69,7 +69,7 @@ export default function Sidebar({ isOpen, onClose }) {
     // Check if feature is locked
     if (item.path === '/dashboard/flash-sales' && settings?.feature_flash_sales !== 'true') return false;
         if (item.path === '/dashboard/formulas' && settings?.feature_formulas !== 'true') return false;
-    if (item.path === '/dashboard/smart-calculator' && settings?.feature_formulas !== 'true') return false;
+    if (item.path === '/dashboard/smart-calculator' && settings?.feature_calculator_materials !== 'true') return false;
     if (item.path === '/dashboard/messages' && settings?.feature_chat !== 'true') return false;
 
     if (user?.role === "vendor") {

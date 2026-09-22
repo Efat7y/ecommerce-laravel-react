@@ -243,7 +243,7 @@ export default function SettingsManager() {
             <p className="text-sm text-slate-400 mb-4">
               هذه الإعدادات محمية برقم سري. عند قفل الميزة، ستختفي تماماً من الموقع أمام الزوار ومن لوحة تحكم التاجر.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               
               {/* Feature: Formula Calculator */}
               <div className="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col items-center justify-center text-center gap-3">
@@ -290,8 +290,24 @@ export default function SettingsManager() {
                 </button>
               </div>
 
+            
+              {/* Feature: Smart Calculator Materials */}
+              <div className="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col items-center justify-center text-center gap-3">
+                <div className="p-3 bg-slate-900 rounded-full">
+                  {(!settings.feature_calculator_materials || settings.feature_calculator_materials === 'false') ? <Lock className="h-6 w-6 text-red-500" /> : <Unlock className="h-6 w-6 text-green-500" />}
+                </div>
+                <h3 className="font-bold text-white">أسعار خامات الحاسبة</h3>
+                <button
+                  type="button"
+                  onClick={() => handleFeatureToggle('feature_calculator_materials', settings.feature_calculator_materials)}
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition ${(!settings.feature_calculator_materials || settings.feature_calculator_materials === 'false') ? 'bg-green-600/20 text-green-500 hover:bg-green-600/30' : 'bg-red-600/20 text-red-500 hover:bg-red-600/30'}`}
+                >
+                  {(!settings.feature_calculator_materials || settings.feature_calculator_materials === 'false') ? 'فتح القفل والتفعيل' : 'قفل وإخفاء الميزة'}
+                </button>
+              </div>
+
+              </div>
             </div>
-          </div>
 
           <div>
             <label className="block text-sm font-semibold text-slate-300 mb-2">شعار الموقع (Logo)</label>
