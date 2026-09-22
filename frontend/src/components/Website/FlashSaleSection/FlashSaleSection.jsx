@@ -32,7 +32,7 @@ export default function FlashSaleSection() {
   )
     return null;
 
-    const endTimeMs = +new Date(flashSale.end_time);
+  const endTimeMs = +new Date(flashSale.end_time);
   const startTimeMs = flashSale.start_time ? +new Date(flashSale.start_time) : 0;
   const revealTimeMs = flashSale.products_reveal_time ? +new Date(flashSale.products_reveal_time) : 0;
   
@@ -52,7 +52,12 @@ export default function FlashSaleSection() {
   const isPriceTeaser = revealTimeMs > 0 && startTimeMs > 0 && currentTime >= revealTimeMs && currentTime < startTimeMs;
   
   // Timer selection
-  const currentTimerEnd = isPriceTeaser ? flashSale.start_time : flashSale.end_time;
+  let currentTimerEnd = flashSale.end_time;
+  if (isPureTeaser) {
+    currentTimerEnd = flashSale.products_reveal_time || flashSale.start_time;
+  } else if (isPriceTeaser) {
+    currentTimerEnd = flashSale.start_time;
+  }
 
   const handleAddToCart = (e, product, flashPrice) => {
     e.preventDefault();
@@ -79,7 +84,7 @@ export default function FlashSaleSection() {
               "تبدأ الخصومات الكبرى قريباً، استعدوا لمفاجأة لن تتكرر!"}
           </p>
           <div className="flex justify-center bg-white/5 p-6 rounded-2xl max-w-xl mx-auto backdrop-blur-sm border border-white/10">
-            <CountdownTimer endTime={flashSale.start_time} />
+            <CountdownTimer endTime={currentTimerEnd} />
           </div>
         </div>
 
@@ -97,13 +102,13 @@ export default function FlashSaleSection() {
   // -------------------------------------------------------------
   return (
     <section
-      className={`py-12 overflow-hidden relative transition-colors duration-1000 ${isEnded ? "لقد فاتك هذا العرض، ترقب عروضنا القادمة!" : isPriceTeaser ? "سيتم فتح قفل السعر قريباً، استعد!" : "سارع قبل نفاد الكمية أو انتهاء الوقت!"}`}
+      className={`py-12 overflow-hidden relative transition-colors duration-1000 ${isEnded ? "bg-gray-100 dark:bg-gray-900/40" : "bg-red-50 dark:bg-red-900/10"}`}
     >
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-6">
           <div className="flex items-center gap-4">
             <div
-              className={`p-3 rounded-full ${isEnded ? "لقد فاتك هذا العرض، ترقب عروضنا القادمة!" : isPriceTeaser ? "سيتم فتح قفل السعر قريباً، استعد!" : "سارع قبل نفاد الكمية أو انتهاء الوقت!"}`}
+              className={`p-3 rounded-full ${isEnded ? "bg-gray-200 dark:bg-gray-800" : "bg-red-100 dark:bg-red-900/50"}`}
             >
               {isEnded ? (
                 <Clock className="w-8 h-8 text-gray-500 dark:text-gray-400" />
@@ -113,7 +118,7 @@ export default function FlashSaleSection() {
             </div>
             <div>
               <h2
-                className={`text-3xl font-bold mb-2 ${isEnded ? "لقد فاتك هذا العرض، ترقب عروضنا القادمة!" : isPriceTeaser ? "سيتم فتح قفل السعر قريباً، استعد!" : "سارع قبل نفاد الكمية أو انتهاء الوقت!"}`}
+                className={`text-3xl font-bold mb-2 ${isEnded ? "text-gray-500 dark:text-gray-400" : "text-gray-900 dark:text-white"}`}
               >
                 {isEnded ? "انتهى العرض ⏰" : isPriceTeaser ? "ترقبوا العرض ⏳" : flashSale.title || "عرض فلاش سيل ⚡"}
               </h2>
@@ -148,6 +153,8 @@ export default function FlashSaleSection() {
           >
             {flashSale.products.map((product) => {
               const flashPrice = product.pivot.discount_price;
+              const flashQty = product.pivot.flash_quantity;
+              const flashSold = product.pivot.flash_sold || 0;
               const discountPercentage = Math.round(
                 ((product.price - flashPrice) / product.price) * 100,
               );
@@ -155,10 +162,10 @@ export default function FlashSaleSection() {
               return (
                 <SwiperSlide key={product.id}>
                   <div
-                    className={`bg-white dark:bg-slate-800 rounded-2xl shadow-sm border overflow-hidden group hover:shadow-xl transition-all h-full flex flex-col relative ${isEnded ? "لقد فاتك هذا العرض، ترقب عروضنا القادمة!" : isPriceTeaser ? "سيتم فتح قفل السعر قريباً، استعد!" : "سارع قبل نفاد الكمية أو انتهاء الوقت!"}`}
+                    className={`bg-white dark:bg-slate-800 rounded-2xl shadow-sm border overflow-hidden group hover:shadow-xl transition-all h-full flex flex-col relative ${isEnded ? "border-gray-200 dark:border-gray-700 opacity-80 grayscale-[50%]" : "border-red-100 dark:border-red-900/30"}`}
                   >
                     <div
-                      className={`absolute top-3 right-3 text-white text-xs font-bold px-2 py-1 rounded-lg z-10 ${isEnded ? "لقد فاتك هذا العرض، ترقب عروضنا القادمة!" : isPriceTeaser ? "سيتم فتح قفل السعر قريباً، استعد!" : "سارع قبل نفاد الكمية أو انتهاء الوقت!"}`}
+                      className={`absolute top-3 right-3 text-white text-xs font-bold px-2 py-1 rounded-lg z-10 ${isEnded ? "bg-gray-500" : "bg-red-600"}`}
                     >
                       {isEnded ? "فاتك العرض" : isPriceTeaser ? "مفاجأة قريباً" : `خصم ${discountPercentage}%`}
                     </div>
@@ -181,14 +188,14 @@ export default function FlashSaleSection() {
                     <div className="p-4 flex flex-col flex-grow">
                       <Link to={`/products/${product.id}`}>
                         <h3
-                          className={`font-semibold mb-2 line-clamp-2 transition-colors ${isEnded ? "لقد فاتك هذا العرض، ترقب عروضنا القادمة!" : isPriceTeaser ? "سيتم فتح قفل السعر قريباً، استعد!" : "سارع قبل نفاد الكمية أو انتهاء الوقت!"}`}
+                          className={`font-semibold mb-2 line-clamp-2 transition-colors ${isEnded ? "text-gray-500 dark:text-gray-400" : "text-gray-900 dark:text-white group-hover:text-red-600"}`}
                         >
                           {product.name}
                         </h3>
                       </Link>
 
                       <div className="mt-auto">
-                                                <div className="flex items-center gap-2 mb-4">
+                        <div className="flex items-center gap-2 mb-4">
                           {isPriceTeaser ? (
                             <div className="flex items-center justify-center w-full bg-slate-100 dark:bg-slate-700 py-2 rounded-lg gap-2">
                               <Lock className="w-5 h-5 text-slate-500" />
@@ -210,7 +217,6 @@ export default function FlashSaleSection() {
                           )}
                         </div>
 
-                                                
                         {/* Quantity Indicator */}
                         {!isEnded && flashQty && (
                           <div className="mb-3">
@@ -226,7 +232,8 @@ export default function FlashSaleSection() {
                             </div>
                           </div>
                         )}
-<button
+
+                        <button
                           onClick={(e) =>
                             handleAddToCart(e, product, flashPrice)
                           }
@@ -253,7 +260,6 @@ export default function FlashSaleSection() {
                 </SwiperSlide>
               );
             })}
-            {/* Custom Navigation Buttons to swap logic while keeping styles */}
             <div className="swiper-button-next custom-prev"></div>
             <div className="swiper-button-prev custom-next"></div>
           </Swiper>
