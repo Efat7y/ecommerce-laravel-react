@@ -57,7 +57,7 @@ class OrderController extends Controller
                             if ($flashSaleProduct->flash_quantity !== null) {
                                 // Prevent exceeding available flash quantity if desired, 
                                 // but for now just increment flash_sold
-                                $flashSaleProduct->increment('flash_sold', $item['quantity']);
+                                $flashSaleProduct->increment('flash_sold', $itemData['quantity']);
                             }
                         }
                     }
