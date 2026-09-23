@@ -32,8 +32,7 @@ return [
             'strict' => true,
             'engine' => null,
             'options' => [
-                1014 => false, // PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT
-                1009 => base_path('cacert.pem'), // PDO::MYSQL_ATTR_SSL_CA
+                1014 => false, // VERIFY_SERVER_CERT
             ],
         ],
 
