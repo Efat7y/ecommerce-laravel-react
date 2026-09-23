@@ -7,6 +7,7 @@ import { Plus, Edit, Trash, Beaker, Check, X } from "lucide-react";
 
 export default function SmartCalculatorManager() {
   const [materials, setMaterials] = useState([]);
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // Form state
@@ -15,7 +16,17 @@ export default function SmartCalculatorManager() {
 
   useEffect(() => {
     fetchMaterials();
+    fetchProducts();
   }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const res = await axios.get(`${baseUrl}/products`);
+      setProducts(res.data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
 
   const fetchMaterials = async () => {
     try {
@@ -103,12 +114,18 @@ export default function SmartCalculatorManager() {
             <div>
               <label className="block text-sm text-slate-400 mb-2">اسم الخامة</label>
               <input
+                list="materials-list"
                 type="text"
                 required
                 value={formData.name}
                 onChange={e => setFormData({...formData, name: e.target.value})}
                 className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white outline-none focus:border-blue-500"
               />
+              <datalist id="materials-list">
+                {products.map(p => (
+                  <option key={p.id} value={p.name} />
+                ))}
+              </datalist>
             </div>
             <div>
               <label className="block text-sm text-slate-400 mb-2">سعر الكيلو (ج.م)</label>
