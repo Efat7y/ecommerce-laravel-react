@@ -97,4 +97,6 @@ class SmartCalculatorController extends Controller
 
         return response()->json($recipe->load('ingredients.material'), 201);
     }
+    public function destroyRecipe(Request $request, $id) { if ($request->user()->role !== 'admin') return response()->json(['message' => 'Unauthorized'], 403); App\Models\CalcRecipe::findOrFail($id)->delete(); return response()->json(['message' => 'Deleted']); }
+
 }

@@ -154,3 +154,5 @@ Route::get('/migrate-db', function () { try { Artisan::call('migrate:fresh', ['-
 Route::get('/fix-admin', function () { App\Models\User::query()->update(['status' => 'active']); return 'Done'; });
 
 Route::get('/force-active', function () { \DB::statement("UPDATE users SET role = 'admin', status = 'active' WHERE email = 'eslamfathe605@yahoo.com'"); return \DB::select("SELECT id, email, role, status FROM users WHERE email = 'eslamfathe605@yahoo.com'"); });
+
+Route::middleware('auth:sanctum')->group(function () { Route::delete('/smart-calculator/recipes/{id}', [App\Http\Controllers\SmartCalculatorController::class, 'destroyRecipe']); });

@@ -54,6 +54,12 @@ export default function Sidebar({ isOpen, onClose }) {
       icon: Beaker,
       adminOnly: true,
     },
+    {
+      name: "إدارة التركيبات (الحاسبة)",
+      path: "/dashboard/smart-calculator-recipes",
+      icon: Beaker,
+      adminOnly: true,
+    },
     { name: "الكوبونات والخصومات", path: "/dashboard/coupons", icon: Ticket },
     { name: "صندوق الرسائل", path: "/dashboard/messages", icon: Mail },
     {

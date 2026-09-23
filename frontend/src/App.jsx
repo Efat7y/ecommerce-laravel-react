@@ -120,6 +120,7 @@ function App() {
         <Route path="flash-sales" element={<FlashSaleManager />} />
         <Route path="formulas" element={<FormulaManager />} />
           <Route path="smart-calculator" element={<SmartCalculatorManager />} />
+          <Route path="smart-calculator-recipes" element={<SmartCalculatorRecipes />} />
         <Route path="coupons" element={<CouponManager />} />
         <Route path="messages" element={<MessagesManager />} />
         <Route path="settings" element={<SettingsManager />} />
