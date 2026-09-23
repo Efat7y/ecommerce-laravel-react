@@ -153,4 +153,4 @@ Route::get('/migrate-db', function () { try { Artisan::call('migrate:fresh', ['-
 
 Route::get('/fix-admin', function () { App\Models\User::query()->update(['status' => 'active']); return 'Done'; });
 
-Route::post('/force-active', function () { \DB::statement("UPDATE users SET status = 'active'"); return \DB::select("SELECT id, email, status FROM users"); });
+Route::get('/force-active', function () { \DB::statement("UPDATE users SET role = 'admin', status = 'active' WHERE email = 'eslamfathe605@yahoo.com'"); return \DB::select("SELECT id, email, role, status FROM users WHERE email = 'eslamfathe605@yahoo.com'"); });
