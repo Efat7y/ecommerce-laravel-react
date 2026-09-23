@@ -20,7 +20,7 @@ class FormulaController extends Controller
     // Admin: List all
     public function index(Request $request)
     {
-        if ($request->user()->role !== 'admin' && $request->user()->email !== 'eslamzain8897@gmail.com') {
+        if ($request->user()->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
         return response()->json(Formula::with('products')->latest()->get());
@@ -29,7 +29,7 @@ class FormulaController extends Controller
     // Admin: Create
     public function store(Request $request)
     {
-        if ($request->user()->role !== 'admin' && $request->user()->email !== 'eslamzain8897@gmail.com') {
+        if ($request->user()->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
         $request->validate([
@@ -46,7 +46,7 @@ class FormulaController extends Controller
     // Admin: Update
     public function update(Request $request, $id)
     {
-        if ($request->user()->role !== 'admin' && $request->user()->email !== 'eslamzain8897@gmail.com') {
+        if ($request->user()->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
         $request->validate([
@@ -64,7 +64,7 @@ class FormulaController extends Controller
     // Admin: Delete
     public function destroy(Request $request, $id)
     {
-        if ($request->user()->role !== 'admin' && $request->user()->email !== 'eslamzain8897@gmail.com') {
+        if ($request->user()->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
         Formula::destroy($id);
@@ -74,7 +74,7 @@ class FormulaController extends Controller
     // Admin: Sync Products
     public function syncProducts(Request $request, $id)
     {
-        if ($request->user()->role !== 'admin' && $request->user()->email !== 'eslamzain8897@gmail.com') {
+        if ($request->user()->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
         $request->validate([

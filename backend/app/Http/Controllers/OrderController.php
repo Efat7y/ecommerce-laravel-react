@@ -177,7 +177,7 @@ class OrderController extends Controller
         $order = Order::with(['user', 'items.product'])->findOrFail($id);
 
         // Check if user is owner or admin
-        if ($order->user_id !== $user->id && $user->email !== 'eslamzain8897@gmail.com') {
+        if ($order->user_id !== $user->id) {
             return response()->json(['message' => 'غير مصرح لك بالوصول لهذا الطلب.'], 403);
         }
 
@@ -278,7 +278,7 @@ class OrderController extends Controller
     public function adminOrders(Request $request)
     {
         $user = $request->user();
-        if (!in_array($user->role, ['admin', 'vendor']) && $user->email !== 'eslamzain8897@gmail.com') {
+        if (!in_array($user->role, ['admin', 'vendor'])) {
             return response()->json(['message' => 'Unauthorized access'], 403);
         }
 
@@ -317,7 +317,7 @@ class OrderController extends Controller
     // Admin: Edit an existing order
     public function updateAdminOrder(Request $request, $id)
     {
-        if ($request->user()->role !== 'admin' && $request->user()->email !== 'eslamzain8897@gmail.com') {
+        if ($request->user()->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -402,7 +402,7 @@ class OrderController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $user = $request->user();
-        if ($user->role !== 'admin' && $user->email !== 'eslamzain8897@gmail.com') {
+        if ($user->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 

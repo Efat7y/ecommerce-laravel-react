@@ -18,7 +18,7 @@ class SmartCalculatorController extends Controller
     // POST /api/smart-calculator/materials
     public function storeMaterial(Request $request)
     {
-        if ($request->user()->role !== 'admin' && $request->user()->email !== 'eslamzain8897@gmail.com') {
+        if ($request->user()->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
         $request->validate([
@@ -34,7 +34,7 @@ class SmartCalculatorController extends Controller
     // PUT /api/smart-calculator/materials/{id}
     public function updateMaterial(Request $request, $id)
     {
-        if ($request->user()->role !== 'admin' && $request->user()->email !== 'eslamzain8897@gmail.com') {
+        if ($request->user()->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
         $material = CalcMaterial::findOrFail($id);
@@ -52,7 +52,7 @@ class SmartCalculatorController extends Controller
     // DELETE /api/smart-calculator/materials/{id}
     public function destroyMaterial(Request $request, $id)
     {
-        if ($request->user()->role !== 'admin' && $request->user()->email !== 'eslamzain8897@gmail.com') {
+        if ($request->user()->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -70,7 +70,7 @@ class SmartCalculatorController extends Controller
     // POST /api/smart-calculator/recipes
     public function storeRecipe(Request $request)
     {
-        if ($request->user()->role !== 'admin' && $request->user()->email !== 'eslamzain8897@gmail.com') {
+        if ($request->user()->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
         $request->validate([

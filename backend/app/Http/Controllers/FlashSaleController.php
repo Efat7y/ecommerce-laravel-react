@@ -24,7 +24,7 @@ class FlashSaleController extends Controller
     // Admin: Get all flash sales
     public function index(Request $request)
     {
-        if ($request->user()->role !== 'admin' && $request->user()->email !== 'eslamzain8897@gmail.com') {
+        if ($request->user()->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
         
@@ -34,7 +34,7 @@ class FlashSaleController extends Controller
     // Admin: Create or update flash sale
     public function store(Request $request)
     {
-        if ($request->user()->role !== 'admin' && $request->user()->email !== 'eslamzain8897@gmail.com') {
+        if ($request->user()->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -68,7 +68,7 @@ class FlashSaleController extends Controller
     // Admin: Update flash sale
     public function update(Request $request, $id)
     {
-        if ($request->user()->role !== 'admin' && $request->user()->email !== 'eslamzain8897@gmail.com') {
+        if ($request->user()->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -103,7 +103,7 @@ class FlashSaleController extends Controller
     // Admin: Add/Sync products to flash sale
     public function syncProducts(Request $request, $id)
     {
-        if ($request->user()->role !== 'admin' && $request->user()->email !== 'eslamzain8897@gmail.com') {
+        if ($request->user()->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -143,7 +143,7 @@ class FlashSaleController extends Controller
     // Admin: Delete flash sale
     public function destroy(Request $request, $id)
     {
-        if ($request->user()->role !== 'admin' && $request->user()->email !== 'eslamzain8897@gmail.com') {
+        if ($request->user()->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
         
