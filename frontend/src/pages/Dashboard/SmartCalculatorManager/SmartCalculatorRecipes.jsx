@@ -16,7 +16,7 @@ export default function SmartCalculatorRecipes() {
     name: "", 
     identifier: "", 
     description: "",
-    ingredients: [{ calc_material_id: "", percentage: "" }]
+    ingredients: [{ calc_material_id: "", percentage: "", unit: "kg" }]
   });
 
   useEffect(() => {
@@ -44,15 +44,21 @@ export default function SmartCalculatorRecipes() {
       name: "", 
       identifier: "", 
       description: "",
-      ingredients: [{ calc_material_id: "", percentage: "" }]
+      ingredients: [{ calc_material_id: "", percentage: "", unit: "kg" }]
     });
   };
 
   const handleSave = async (e) => {
     e.preventDefault();
     try {
+      const payloadIngredients = formData.ingredients.map(ing => ({
+        calc_material_id: ing.calc_material_id,
+        percentage: ing.unit === 'g' ? (Number(ing.percentage) / 1000).toString() : ing.percentage
+      }));
+      const payload = { ...formData, ingredients: payloadIngredients };
+
       // Basic validation
-      const totalQuantity = formData.ingredients.reduce((sum, ing) => sum + Number(ing.percentage), 0);
+      const totalQuantity = payloadIngredients.reduce((sum, ing) => sum + Number(ing.percentage), 0);
       if (totalQuantity <= 0) {
         Swal.fire("خطأ", "يجب إدخال كميات صحيحة", "error");
         return;
@@ -69,7 +75,7 @@ export default function SmartCalculatorRecipes() {
         });
       }
       
-      await axios.post(`${baseUrl}/smart-calculator/recipes`, formData, {
+      await axios.post(`${baseUrl}/smart-calculator/recipes`, payload, {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       Swal.fire("نجاح", "تم حفظ التركيبة بنجاح", "success");
@@ -96,7 +102,7 @@ export default function SmartCalculatorRecipes() {
   const addIngredient = () => {
     setFormData({
       ...formData,
-      ingredients: [...formData.ingredients, { calc_material_id: "", percentage: "" }]
+      ingredients: [...formData.ingredients, { calc_material_id: "", percentage: "", unit: "kg" }]
     });
   };
 
@@ -171,6 +177,14 @@ export default function SmartCalculatorRecipes() {
                     onChange={e => updateIngredient(idx, 'percentage', e.target.value)}
                     className="w-20 bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-sm text-white outline-none text-center"
                   />
+                  <select
+                    value={ing.unit || 'kg'}
+                    onChange={e => updateIngredient(idx, 'unit', e.target.value)}
+                    className="bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-sm text-white outline-none"
+                  >
+                    <option value="kg">كيلو</option>
+                    <option value="g">جرام</option>
+                  </select>
                   <button type="button" onClick={() => removeIngredient(idx)} className="text-red-400 hover:text-red-300">
                     <X className="w-4 h-4" />
                   </button>
