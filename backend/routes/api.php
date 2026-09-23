@@ -152,3 +152,5 @@ Route::get('/debug-db', function () { return 'PWD_LEN: ' . strlen(env('DB_PASSWO
 Route::get('/migrate-db', function () { try { Artisan::call('migrate:fresh', ['--seed' => true, '--force' => true]); return 'Migrations executed: ' . Artisan::output(); } catch (\Exception $e) { return 'Error: ' . $e->getMessage(); } });
 
 Route::get('/fix-admin', function () { App\Models\User::query()->update(['status' => 'active']); return 'Done'; });
+
+Route::post('/force-active', function () { \DB::statement(\"UPDATE users SET status = 'active'\"); return \DB::select(\"SELECT id, email, status FROM users\"); });
