@@ -43,6 +43,7 @@ export default function SmartFormulaCalculator() {
     if (!recipe) return;
 
     const targetVolume = parseFloat(selectedVolume);
+    const baseTotalWeight = recipe.ingredients.reduce((sum, ing) => sum + parseFloat(ing.percentage), 0);
     
     // Total standard percentage should be 100
     // Separate active and filler/neutral
@@ -72,19 +73,19 @@ export default function SmartFormulaCalculator() {
 
     // Calculate base weights and costs per 1 kg of final product
     activeIngredients.forEach(ing => {
-      const weightIn1Kg = ing.percentage / 100;
+      const weightIn1Kg = (parseFloat(ing.percentage) / baseTotalWeight);
       Wa += weightIn1Kg;
       Ca += weightIn1Kg * parseFloat(ing.material.price_per_kg);
     });
 
     neutralIngredients.forEach(ing => {
-      const weightIn1Kg = ing.percentage / 100;
+      const weightIn1Kg = (parseFloat(ing.percentage) / baseTotalWeight);
       Wn += weightIn1Kg;
       Cn += weightIn1Kg * parseFloat(ing.material.price_per_kg);
     });
 
     fillerIngredients.forEach(ing => {
-      const weightIn1Kg = ing.percentage / 100;
+      const weightIn1Kg = (parseFloat(ing.percentage) / baseTotalWeight);
       Wf += weightIn1Kg;
       Cf += weightIn1Kg * parseFloat(ing.material.price_per_kg);
     });
@@ -133,7 +134,7 @@ export default function SmartFormulaCalculator() {
     // 1. Add Neutrals (Unchanged ratio)
     let actualWn = 0;
     neutralIngredients.forEach(ing => {
-      const w = (ing.percentage / 100) * targetVolume;
+      const w = ((parseFloat(ing.percentage) / baseTotalWeight)) * targetVolume;
       actualWn += w;
       finalTotalCost += w * parseFloat(ing.material.price_per_kg);
       finalRecipe.push({
@@ -149,7 +150,7 @@ export default function SmartFormulaCalculator() {
     // 2. Add Actives (Scaled)
     let actualWa = 0;
     activeIngredients.forEach(ing => {
-      const originalW = (ing.percentage / 100) * targetVolume;
+      const originalW = ((parseFloat(ing.percentage) / baseTotalWeight)) * targetVolume;
       const w = originalW * scaleActives;
       actualWa += w;
       finalTotalCost += w * parseFloat(ing.material.price_per_kg);
@@ -167,13 +168,13 @@ export default function SmartFormulaCalculator() {
     const targetWf = targetVolume - actualWn - actualWa;
     
     // We distribute targetWf among fillers based on their original proportions
-    let originalWfTotal = fillerIngredients.reduce((acc, ing) => acc + (ing.percentage / 100), 0);
+    let originalWfTotal = fillerIngredients.reduce((acc, ing) => acc + ((parseFloat(ing.percentage) / baseTotalWeight)), 0);
     if (originalWfTotal === 0 && targetWf > 0) {
       // Fallback if no filler specified but we need one, usually there is water
     }
     
     fillerIngredients.forEach(ing => {
-      const proportion = (ing.percentage / 100) / originalWfTotal;
+      const proportion = ((parseFloat(ing.percentage) / baseTotalWeight)) / originalWfTotal;
       const w = targetWf * proportion;
       finalTotalCost += w * parseFloat(ing.material.price_per_kg);
       

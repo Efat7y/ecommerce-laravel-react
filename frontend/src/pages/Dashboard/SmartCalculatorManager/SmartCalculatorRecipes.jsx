@@ -52,9 +52,9 @@ export default function SmartCalculatorRecipes() {
     e.preventDefault();
     try {
       // Basic validation
-      const totalPercentage = formData.ingredients.reduce((sum, ing) => sum + Number(ing.percentage), 0);
-      if (Math.abs(totalPercentage - 100) > 0.1) {
-        Swal.fire("خطأ", "يجب أن يكون مجموع النسب المئوية 100%", "error");
+      const totalQuantity = formData.ingredients.reduce((sum, ing) => sum + Number(ing.percentage), 0);
+      if (totalQuantity <= 0) {
+        Swal.fire("خطأ", "يجب إدخال كميات صحيحة", "error");
         return;
       }
 
@@ -147,7 +147,7 @@ export default function SmartCalculatorRecipes() {
             </div>
             
             <div className="border-t border-slate-700 pt-4 mt-4">
-              <label className="block text-sm text-slate-400 mb-2">المكونات (يجب أن يكون المجموع 100%)</label>
+              <label className="block text-sm text-slate-400 mb-2">المقادير (أدخل الكمية بالكيلو أو الجرام كما في وصفتك الأساسية)</label>
               
               {formData.ingredients.map((ing, idx) => (
                 <div key={idx} className="flex gap-2 mb-2 items-center">
@@ -164,12 +164,12 @@ export default function SmartCalculatorRecipes() {
                   </select>
                   <input
                     type="number"
-                    step="0.01"
+                    step="0.001"
                     required
-                    placeholder="%"
+                    placeholder="الكمية"
                     value={ing.percentage}
                     onChange={e => updateIngredient(idx, 'percentage', e.target.value)}
-                    className="w-16 bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-sm text-white outline-none text-center"
+                    className="w-20 bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-sm text-white outline-none text-center"
                   />
                   <button type="button" onClick={() => removeIngredient(idx)} className="text-red-400 hover:text-red-300">
                     <X className="w-4 h-4" />
