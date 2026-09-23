@@ -32,8 +32,8 @@ return [
             'strict' => true,
             'engine' => null,
             'options' => [
-                (PHP_VERSION_ID >= 80400 ? Pdo\Mysql::ATTR_SSL_VERIFY_SERVER_CERT : PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT) => false,
-                (PHP_VERSION_ID >= 80400 ? Pdo\Mysql::ATTR_SSL_CA : PDO::MYSQL_ATTR_SSL_CA) => base_path('cacert.pem'),
+                1014 => false, // PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT
+                1009 => base_path('cacert.pem'), // PDO::MYSQL_ATTR_SSL_CA
             ],
         ],
 
