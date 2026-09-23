@@ -40,6 +40,7 @@ export default function OtpVerification() {
       // Update local storage user status
       const updatedUser = { ...user, status: "active" };
       localStorage.setItem("user", JSON.stringify(updatedUser));
+      localStorage.removeItem("dev_otp");
       
       toast.success(res.data.message || "تم تأكيد الحساب بنجاح!");
       window.location.href = "/"; // Reload to refresh app state
@@ -66,6 +67,13 @@ export default function OtpVerification() {
             لقد أرسلنا كود التفعيل المكون من 6 أرقام إلى رقم هاتفك/الواتساب. يرجى إدخاله أدناه.
           </p>
         </div>
+
+        {localStorage.getItem("dev_otp") && (
+          <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-xl text-center text-sm font-medium">
+            نسخة تجريبية للعميل: كود التفعيل هو{" "}
+            <span className="font-bold text-lg mx-1">{localStorage.getItem("dev_otp")}</span>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
           <div>

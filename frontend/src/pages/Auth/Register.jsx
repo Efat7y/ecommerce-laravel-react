@@ -29,6 +29,7 @@ export default function Register() {
       toast.success(res.data.message || "تم إنشاء الحساب بنجاح، يرجى تفعيل حسابك");
       if (res.data.dev_otp) {
         console.log("OTP (For Dev):", res.data.dev_otp);
+        localStorage.setItem("dev_otp", res.data.dev_otp);
         toast.info(`للتطوير: كود التفعيل هو ${res.data.dev_otp}`);
       }
       
