@@ -3,6 +3,7 @@ import { ShoppingBag } from "lucide-react";
 import FlashSaleManager from './pages/Dashboard/FlashSaleManager/FlashSaleManager';
 import FormulaManager from './pages/Dashboard/FormulaManager/FormulaManager';
 import SmartCalculatorManager from './pages/Dashboard/SmartCalculatorManager/SmartCalculatorManager';
+import SmartCalculatorRecipes from './pages/Dashboard/SmartCalculatorManager/SmartCalculatorRecipes';
 import { Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import PageTransition from "./components/PageTransition";
