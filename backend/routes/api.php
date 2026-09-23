@@ -146,3 +146,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 
+
+Route::get('/debug-db', function () { return 'PWD_LEN: ' . strlen(env('DB_PASSWORD')) . ' CA_EXISTS: ' . (file_exists(base_path('cacert.pem')) ? 'YES' : 'NO') . ' DB_HOST: ' . env('DB_HOST'); });
