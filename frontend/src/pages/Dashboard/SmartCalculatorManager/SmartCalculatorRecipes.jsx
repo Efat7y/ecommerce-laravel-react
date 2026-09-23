@@ -48,6 +48,20 @@ export default function SmartCalculatorRecipes() {
     });
   };
 
+  const handleEdit = (recipe) => {
+    setEditingId(recipe.id);
+    setFormData({
+      name: recipe.name,
+      identifier: recipe.identifier,
+      description: recipe.description || "",
+      ingredients: recipe.ingredients.map(ing => ({
+        calc_material_id: ing.calc_material_id,
+        percentage: ing.percentage,
+        unit: 'kg'
+      }))
+    });
+  };
+
   const handleSave = async (e) => {
     e.preventDefault();
     try {
@@ -156,12 +170,12 @@ export default function SmartCalculatorRecipes() {
               <label className="block text-sm text-slate-400 mb-2">المقادير (أدخل الكمية بالكيلو أو الجرام كما في وصفتك الأساسية)</label>
               
               {formData.ingredients.map((ing, idx) => (
-                <div key={idx} className="flex gap-2 mb-2 items-center">
+                <div key={idx} className="flex flex-wrap sm:flex-nowrap gap-2 mb-3 items-center bg-slate-900/50 p-2 rounded-lg border border-slate-700/50">
                   <select
                     required
                     value={ing.calc_material_id}
                     onChange={e => updateIngredient(idx, 'calc_material_id', e.target.value)}
-                    className="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-sm text-white outline-none"
+                    className="w-full sm:flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-sm text-white outline-none"
                   >
                     <option value="">اختر الخامة</option>
                     {materials.map(m => (
@@ -175,12 +189,12 @@ export default function SmartCalculatorRecipes() {
                     placeholder="الكمية"
                     value={ing.percentage}
                     onChange={e => updateIngredient(idx, 'percentage', e.target.value)}
-                    className="w-20 bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-sm text-white outline-none text-center"
+                    className="flex-1 sm:w-24 bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-sm text-white outline-none text-center"
                   />
                   <select
                     value={ing.unit || 'kg'}
                     onChange={e => updateIngredient(idx, 'unit', e.target.value)}
-                    className="bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-sm text-white outline-none"
+                    className="w-24 sm:w-auto bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-sm text-white outline-none"
                   >
                     <option value="kg">كيلو</option>
                     <option value="g">جرام</option>
@@ -234,6 +248,9 @@ export default function SmartCalculatorRecipes() {
                         {recipe.ingredients?.length || 0} خامات
                       </td>
                       <td className="py-4 px-6 flex gap-2">
+                        <button onClick={() => handleEdit(recipe)} className="p-2 bg-blue-600/20 text-blue-400 hover:bg-blue-600 hover:text-white rounded-lg transition">
+                          <Edit className="w-4 h-4" />
+                        </button>
                         <button onClick={() => handleDelete(recipe.id)} className="p-2 bg-red-600/20 text-red-400 hover:bg-red-600 hover:text-white rounded-lg transition">
                           <Trash className="w-4 h-4" />
                         </button>
