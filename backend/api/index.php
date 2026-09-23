@@ -8,5 +8,12 @@ putenv('VIEW_COMPILED_PATH=/tmp');
 putenv('CACHE_STORE=array');
 putenv('SESSION_DRIVER=array');
 putenv('LOG_CHANNEL=stderr');
+putenv('APP_DEBUG=true');
 
-require __DIR__ . '/../public/index.php';
+try {
+    require __DIR__ . '/../public/index.php';
+} catch (\Throwable $e) {
+    echo $e->getMessage();
+    echo "\n";
+    echo $e->getTraceAsString();
+}
