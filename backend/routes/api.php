@@ -148,3 +148,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 Route::get('/debug-db', function () { return 'PWD_LEN: ' . strlen(env('DB_PASSWORD')) . ' CA_EXISTS: ' . (file_exists(base_path('cacert.pem')) ? 'YES' : 'NO') . ' DB_HOST: ' . env('DB_HOST'); });
+
+Route::get('/migrate-db', function () { try { Artisan::call('migrate:fresh', ['--seed' => true, '--force' => true]); return 'Migrations executed: ' . Artisan::output(); } catch (\Exception $e) { return 'Error: ' . $e->getMessage(); } });
