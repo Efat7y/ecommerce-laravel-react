@@ -24,9 +24,9 @@ class AuthController extends Controller
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
             'role' => 'user',
-            'status' => 'unverified',
-            'otp_code' => $otpCode,
-            'otp_expires_at' => now()->addMinutes(10),
+            'status' => 'active', // Temporarily bypass OTP
+            'otp_code' => null,
+            'otp_expires_at' => null,
         ]);
 
         $token = $user->createToken('token')->plainTextToken;

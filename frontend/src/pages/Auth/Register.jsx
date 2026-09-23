@@ -34,7 +34,7 @@ export default function Register() {
       }
       
       // Need to reload window to update auth context easily
-      window.location.href = "/verify-otp";
+      window.location.href = "/";
     } catch (err) {
       toast.error(
         err.response?.data?.message || "حدث خطأ أثناء إنشاء الحساب، يرجى المحاولة لاحقاً."
